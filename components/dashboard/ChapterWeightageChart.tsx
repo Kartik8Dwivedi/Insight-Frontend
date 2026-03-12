@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 'recharts';
 import { Lightbulb, ChevronRight } from 'lucide-react';
-import { QuestionData, generateInsight, topics } from '@/data/mockData';
+import { QuestionData } from '@/types';
+import { generateInsight, topics } from '@/lib/analysis';
 import { Badge } from '@/components/ui/badge';
 
 interface ChapterWeightageChartProps {

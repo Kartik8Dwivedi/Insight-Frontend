@@ -1,28 +1,4 @@
-export interface QuestionOccurrence {
-  year: number;
-  shift: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  category: 'Fact' | 'Formula' | 'Conceptual';
-  sourceFile: string;
-}
-
-export interface QuestionData {
-  _id: string;
-  questionHash: string;
-  questionText: string;
-  subject: 'Physics' | 'Chemistry' | 'Mathematics';
-  chapter: string;
-  topic: string;
-  repeatCount: number;
-  history: QuestionOccurrence[];
-  averageDifficulty: 'Easy' | 'Medium' | 'Hard';
-  mainCategory: 'Fact' | 'Formula' | 'Conceptual';
-  // Legacy fields for backward compatibility with existing charts
-  domain?: 'Physics' | 'Chemistry' | 'Mathematics';
-  difficulty?: 'Easy' | 'Medium' | 'Hard';
-  category?: 'Fact' | 'Formula' | 'Conceptual';
-  year?: number;
-}
+import { QuestionData, FilterState } from "@/types";
 
 export const chapters: Record<string, string[]> = {
   Physics: [
@@ -33,7 +9,7 @@ export const chapters: Record<string, string[]> = {
     'Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry',
     'Coordination Compounds', 'Chemical Bonding', 'Electrochemistry'
   ],
-  Maths: [
+  Mathematics: [
     'Calculus', 'Algebra', 'Coordinate Geometry', 'Trigonometry',
     'Probability & Statistics', 'Vectors & 3D', 'Matrices & Determinants'
   ],
@@ -52,52 +28,6 @@ export const topics: Record<string, string[]> = {
   'Algebra': ['Quadratic Equations', 'Sequences & Series', 'Complex Numbers', 'Permutations'],
   'Coordinate Geometry': ['Straight Lines', 'Circles', 'Parabola', 'Ellipse & Hyperbola'],
 };
-
-// Generate mock data
-const generateMockData = (): QuestionData[] => {
-  const data: QuestionData[] = [];
-  const domains: ('Physics' | 'Chemistry' | 'Maths')[] = ['Physics', 'Chemistry', 'Maths'];
-  const categories: ('Fact' | 'Formula' | 'Conceptual')[] = ['Fact', 'Formula', 'Conceptual'];
-  const difficulties: ('Easy' | 'Medium' | 'Hard')[] = ['Easy', 'Medium', 'Hard'];
-  const years = [2019, 2020, 2021, 2022, 2023, 2024];
-
-  let id = 1;
-  
-  domains.forEach(domain => {
-    const domainChapters = chapters[domain];
-    domainChapters.forEach(chapter => {
-      const chapterTopics = topics[chapter] || ['General'];
-      chapterTopics.forEach(topic => {
-        // Generate 3-8 questions per topic
-        const questionCount = Math.floor(Math.random() * 6) + 3;
-        for (let i = 0; i < questionCount; i++) {
-          data.push({
-            id: `Q${id++}`,
-            domain,
-            chapter,
-            topic,
-            category: categories[Math.floor(Math.random() * categories.length)],
-            difficulty: difficulties[Math.floor(Math.random() * difficulties.length)],
-            year: years[Math.floor(Math.random() * years.length)],
-          });
-        }
-      });
-    });
-  });
-
-  return data;
-};
-
-export const mockData = generateMockData();
-
-export interface FilterState {
-  domains: string[];
-  chapters: string[];
-  topics: string[];
-  categories: string[];
-  difficulties: string[];
-  yearRange: [number, number];
-}
 
 export const defaultFilters: FilterState = {
   domains: [],

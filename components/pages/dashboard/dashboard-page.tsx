@@ -8,7 +8,8 @@ import { DifficultyHeatmap } from '@/components/dashboard/DifficultyHeatmap';
 import { ChapterWeightageChart } from '@/components/dashboard/ChapterWeightageChart';
 import { YearTrendChart } from '@/components/dashboard/YearTrendChart';
 import { SummaryPanel } from '@/components/dashboard/SummaryPanel';
-import { mockData, defaultFilters, filterData, FilterState, QuestionData } from '@/data/mockData';
+import { FilterState, QuestionData } from '@/types';
+import { defaultFilters } from '@/lib/analysis';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Loader } from 'lucide-react';
 

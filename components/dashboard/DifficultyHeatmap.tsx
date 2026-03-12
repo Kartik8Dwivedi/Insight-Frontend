@@ -1,7 +1,8 @@
 "use client"
 import { useMemo } from 'react';
 import { Lightbulb } from 'lucide-react';
-import { QuestionData, generateInsight } from '@/data/mockData';
+import { QuestionData } from '@/types';
+import { generateInsight } from '@/lib/analysis';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface DifficultyHeatmapProps {

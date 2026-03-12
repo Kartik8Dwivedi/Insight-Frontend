@@ -1,5 +1,5 @@
 import DashboardPage from "@/components/pages/dashboard/dashboard-page";
-import { QuestionData } from "@/data/mockData";
+import { QuestionData } from "@/types";
 import { getChaptersAndTopics } from "@/lib/utils";
 import { Loader } from "lucide-react";
 import { Suspense } from "react";

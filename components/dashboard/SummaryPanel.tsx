@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { TrendingUp, Target, Zap, BookOpen, AlertTriangle, Award } from 'lucide-react';
-import { QuestionData } from '@/data/mockData';
+import { QuestionData } from '@/types';
 import { Badge } from '@/components/ui/badge';
 
 interface SummaryPanelProps {

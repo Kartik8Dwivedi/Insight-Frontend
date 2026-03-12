@@ -6,7 +6,7 @@ import { Slider } from '@/components/ui/slider';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { FilterState } from '@/data/mockData';
+import { FilterState } from '@/types';
 
 interface FilterPanelProps {
   chapters: Record<string, string[]>;

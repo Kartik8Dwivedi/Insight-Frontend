@@ -1,4 +1,4 @@
-import { QuestionData } from "@/data/mockData";
+import { QuestionData } from "@/types";
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 

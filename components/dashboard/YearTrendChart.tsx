@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer, Tooltip, Legend, CartesianGrid } from 'recharts';
 import { Lightbulb } from 'lucide-react';
-import { QuestionData, generateInsight } from '@/data/mockData';
+import { QuestionData } from '@/types';
+import { generateInsight } from '@/lib/analysis';
 
 interface YearTrendChartProps {
   data: QuestionData[];

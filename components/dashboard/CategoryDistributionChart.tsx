@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
 import { Lightbulb } from 'lucide-react';
-import { QuestionData, generateInsight } from '@/data/mockData';
+import { QuestionData } from '@/types';
+import { generateInsight } from '@/lib/analysis';
 
 interface CategoryDistributionChartProps {
   data: QuestionData[];
