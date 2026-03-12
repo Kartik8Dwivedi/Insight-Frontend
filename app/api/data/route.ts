@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const getCleanBackendUrl = () => {
-  let url = process.env.BACKEND_URL || "http://localhost:8001";
+  let url = process.env.BACKEND_URL || "https://insight-backend-1016629498190.asia-south2.run.app";
   if (!url.includes("/api/v1")) {
     url = url.endsWith("/") ? `${url}api/v1` : `${url}/api/v1`;
   }
