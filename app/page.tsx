@@ -39,7 +39,7 @@ function Navbar() {
       <Link href="#" className={styles.navLogo}>
         <span className={styles.navLogoIcon}>E</span> ExamIntel
       </Link>
-      <Link href="/dashboard" className={styles.navCta}>
+      <Link prefetch href="/dashboard" className={styles.navCta}>
         Open JEE Dashboard →
       </Link>
     </nav>
@@ -61,7 +61,7 @@ function HeroSection() {
         topics, and build a strategy grounded in real data.
       </p>
       <div className={styles.heroActions}>
-        <Link href="/dashboard" className={styles.btnPrimary}>
+        <Link prefetch href="/dashboard" className={styles.btnPrimary}>
           Explore JEE Dashboard
           <ArrowIcon />
         </Link>
@@ -420,7 +420,7 @@ function CTASection() {
           Join students who prepare with clarity, not chaos. JEE Dashboard is
           live and free.
         </p>
-        <Link href="/dashboard" className={styles.btnWhite}>
+        <Link prefetch href="/dashboard" className={styles.btnWhite}>
           Open JEE Dashboard — It&apos;s Free
           <ArrowIcon />
         </Link>
@@ -446,7 +446,7 @@ function Footer() {
 
 function FloatingBar() {
   return (
-    <Link href="#" className={styles.floatingBar}>
+    <Link prefetch href="/dashboard" className={styles.floatingBar}>
       Open JEE Dashboard — Free →
     </Link>
   );
