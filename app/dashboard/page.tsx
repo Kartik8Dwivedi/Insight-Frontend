@@ -5,7 +5,16 @@ import { Loader } from "lucide-react";
 import { Suspense } from "react";
 import { headers } from "next/headers";
 
-const Homepage = async () => {
+export default async function Dashboard() {
+  return (
+    <Suspense fallback={<Loading />}>
+      <DashboardTryCatchWrapper />
+    </Suspense>
+  )
+}
+
+
+const DashboardTryCatchWrapper = async () => {
   // Determine base URL dynamically based on environment
   const headersList = await headers();
   const host = headersList.get("host") || "localhost:3000";
@@ -24,13 +33,11 @@ const Homepage = async () => {
     const { chapters, topics } = getChaptersAndTopics(filteredData);
 
     return (
-      <Suspense fallback={<Loading />}>
-        <DashboardPage
-          mockData={filteredData}
-          chapters={chapters}
-          topics={topics}
-        />
-      </Suspense>
+      <DashboardPage
+        mockData={filteredData}
+        chapters={chapters}
+        topics={topics}
+      />
     );
   } catch (err: any) {
     console.error("Critical Page Error:", err.message);
@@ -48,7 +55,7 @@ const Homepage = async () => {
   }
 }
 
-export default Homepage;
+// export default Homepage;
 
 function Loading() {
   return (
