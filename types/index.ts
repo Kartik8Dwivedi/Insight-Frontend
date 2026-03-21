@@ -34,25 +34,6 @@ export interface FilterState {
   yearRange: [number, number];
 }
 
-<<<<<<< HEAD
-
-export type MockChatResponse = {
-  id: string
-  status: "pending"
-  userPrompt: string
-  llmResponse: null
-} | {
-  id: string
-  status: "success"
-  userPrompt: string
-  llmResponse: string
-} | {
-  id: string
-  status: "failed"
-  userPrompt: string
-  llmResponse: null
-}
-=======
 // Pre-computed stats shape returned by computeStats()
 export interface ComputedStats {
   totalQuestions: number;
@@ -68,7 +49,6 @@ export interface ComputedStats {
   }>;
   yearTrend: Array<{ _id: { year: number; category: string }; count: number }>;
 }
->>>>>>> 8d9caf02c0a326c4498aa0e3a359a54932f65da4
 
 
 export type MockChatResponse = {

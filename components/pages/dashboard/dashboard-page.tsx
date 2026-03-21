@@ -11,12 +11,13 @@ import { SummaryPanel } from '@/components/dashboard/SummaryPanel';
 import { FilterState } from '@/types';
 import { defaultFilters, filterData, computeStats } from '@/lib/analysis';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Loader } from 'lucide-react';
 import styles from "./home.module.css";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useAnalyticsData } from '@/hooks/useAnalyticsData';
-import { Loader, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 const DashboardPage = () => {
   const { allData, loading, error } = useAnalyticsData();
@@ -97,8 +98,6 @@ const DashboardPage = () => {
 
             <div className="text-center py-4 border-t border-border">
               <p className="text-sm text-muted-foreground">
-                Data based on JEE Main pattern analysis (2002-2025) •
-                <span className="font-mono ml-1">{stats ? stats.totalQuestions : mockData.length}</span> questions analyzed
                 Data based on JEE Main pattern analysis (2021–2025) •{' '}
                 <span className="font-mono">{stats.totalQuestions}</span> of{' '}
                 <span className="font-mono">{allData.length}</span> questions selected
@@ -137,7 +136,7 @@ function MobileOverlay() {
         </Button>
       </div>
     </section>
-  );
+  )
 }
 
 const ArrowIcon = () => (
