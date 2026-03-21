@@ -58,7 +58,7 @@ const NewChatPage = () => {
 			<p className="text-neutral-600 text-lg font-medium text-center mb-5">
 				What would you like to ask?
 			</p>
-			<div className="bg-background w-full max-w-[700px] mx-auto flex gap-2 rounded-xl mb-5">
+			<div className="bg-background w-full sm:max-w-[700px] max-w-[90vw]  mx-auto  flex gap-2 rounded-xl mb-5">
 				<div className="rounded-xl border-ei-accent-mid border-2 w-full p-2">
 					<Textarea
 						ref={textareaRef}
@@ -67,15 +67,17 @@ const NewChatPage = () => {
 						value={prompt}
 						onChange={(e) => setPrompt(e.target.value)}
 					/>
-					<Button
-						ref={buttonRef}
-						size="icon-lg"
-						className="text-white h-9 w-9 bg-ei-accent hover:bg-ei-accent/80"
-						// disabled={prompt.length === 0 || isLoading}
-						onClick={handleNewChat}
-					>
-						<ArrowUp />
-					</Button>
+					<div className="flex justify-end">
+						<Button
+							ref={buttonRef}
+							size="icon-lg"
+							className="text-white h-9 w-9 bg-ei-accent hover:bg-ei-accent/80"
+							// disabled={prompt.length === 0 || isLoading}
+							onClick={handleNewChat}
+						>
+							<ArrowUp />
+						</Button>
+					</div>
 				</div>
 			</div>
 			{/* <div className="w-full max-w-[700px] mx-auto flex flex-wrap gap-2 px-2 mb-5">

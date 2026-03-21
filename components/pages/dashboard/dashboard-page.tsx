@@ -98,7 +98,7 @@ const DashboardPage = () => {
 
             <div className="text-center py-4 border-t border-border">
               <p className="text-sm text-muted-foreground">
-                Data based on JEE Main pattern analysis (2021–2025) •{' '}
+                Data based on JEE Main pattern analysis (2002–2025) •{' '}
                 <span className="font-mono">{stats.totalQuestions}</span> of{' '}
                 <span className="font-mono">{allData.length}</span> questions selected
               </p>
