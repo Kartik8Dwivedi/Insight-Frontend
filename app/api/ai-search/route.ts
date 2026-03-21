@@ -113,7 +113,7 @@ const TAXONOMY = {
       "Interference & Diffraction",
       "Young's Double Slit Experiment",
     ],
-    "Thermodynamics Chemistry": [
+    "Thermodynamics Physics": [
       "Laws of Thermodynamics",
       "Heat & Calorimetry",
       "Heat Transfer",
