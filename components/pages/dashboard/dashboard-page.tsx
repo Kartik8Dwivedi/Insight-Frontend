@@ -1,51 +1,63 @@
 "use client";
 
-import { useState, useMemo, useCallback } from 'react';
-import { Header } from '@/components/dashboard/Header';
-import { FilterPanel } from '@/components/dashboard/FilterPanel';
-import { CategoryDistributionChart } from '@/components/dashboard/CategoryDistributionChart';
-import { DifficultyHeatmap } from '@/components/dashboard/DifficultyHeatmap';
-import { ChapterWeightageChart } from '@/components/dashboard/ChapterWeightageChart';
-import { YearTrendChart } from '@/components/dashboard/YearTrendChart';
-import { SummaryPanel } from '@/components/dashboard/SummaryPanel';
-import { FilterState } from '@/types';
-import { defaultFilters, filterData, computeStats } from '@/lib/analysis';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { Button } from '@/components/ui/button';
-import { useAnalyticsData } from '@/hooks/useAnalyticsData';
-import { Loader, AlertCircle } from 'lucide-react';
+import { useState, useMemo, useCallback } from "react";
+import { Header } from "@/components/dashboard/Header";
+import { FilterPanel } from "@/components/dashboard/FilterPanel";
+import { CategoryDistributionChart } from "@/components/dashboard/CategoryDistributionChart";
+import { DifficultyHeatmap } from "@/components/dashboard/DifficultyHeatmap";
+import { ChapterWeightageChart } from "@/components/dashboard/ChapterWeightageChart";
+import { YearTrendChart } from "@/components/dashboard/YearTrendChart";
+import { SummaryPanel } from "@/components/dashboard/SummaryPanel";
+import { FilterState } from "@/types";
+import { defaultFilters, filterData, computeStats } from "@/lib/analysis";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
+import { useAnalyticsData } from "@/hooks/useAnalyticsData";
+import { Loader, AlertCircle } from "lucide-react";
 
 const DashboardPage = () => {
   const { allData, loading, error } = useAnalyticsData();
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
 
-  // Derive chapters & topics from the real data (not hardcoded)
   const { chapters, topics } = useMemo(() => {
     const chapters: Record<string, string[]> = {};
     const topics: Record<string, string[]> = {};
     for (const item of allData) {
       if (!chapters[item.domain]) chapters[item.domain] = [];
-      if (!chapters[item.domain].includes(item.chapter)) chapters[item.domain].push(item.chapter);
+      if (!chapters[item.domain].includes(item.chapter))
+        chapters[item.domain].push(item.chapter);
       if (!topics[item.chapter]) topics[item.chapter] = [];
-      if (!topics[item.chapter].includes(item.topic)) topics[item.chapter].push(item.topic);
+      if (!topics[item.chapter].includes(item.topic))
+        topics[item.chapter].push(item.topic);
     }
     return { chapters, topics };
   }, [allData]);
 
-  // Filter client-side — O(n), ~5ms for 9k records
-  const filteredData = useMemo(() => filterData(allData, filters), [allData, filters]);
-
-  // Compute all chart stats from the filtered slice — replaces MongoDB $facet
+  const filteredData = useMemo(
+    () => filterData(allData, filters),
+    [allData, filters],
+  );
   const stats = useMemo(() => computeStats(filteredData), [filteredData]);
 
-  const handleFilterChange = useCallback((next: FilterState) => setFilters(next), []);
+  const handleFilterChange = useCallback(
+    (next: FilterState) => setFilters(next),
+    [],
+  );
+  const handleAIFilters = useCallback(
+    (aiFilters: FilterState) => setFilters(aiFilters),
+    [],
+  );
 
   if (loading) {
     return (
       <div className="min-h-screen bg-background flex justify-center items-center gap-2">
         <Loader className="animate-spin" size={20} />
-        <p className="text-muted-foreground font-semibold">Loading {allData.length > 0 ? `${allData.length} questions…` : 'data…'}</p>
+        <p className="text-muted-foreground font-semibold">
+          {allData.length > 0
+            ? `Loading ${allData.length} questions…`
+            : "Loading data…"}
+        </p>
       </div>
     );
   }
@@ -55,9 +67,13 @@ const DashboardPage = () => {
       <div className="min-h-screen bg-background flex justify-center items-center">
         <div className="text-center p-8">
           <AlertCircle className="mx-auto mb-4 text-destructive" size={40} />
-          <p className="font-semibold text-destructive">Failed to load analytics data</p>
+          <p className="font-semibold text-destructive">
+            Failed to load analytics data
+          </p>
           <p className="text-sm text-muted-foreground mt-2">{error}</p>
-          <Button className="mt-4" onClick={() => window.location.reload()}>Retry</Button>
+          <Button className="mt-4" onClick={() => window.location.reload()}>
+            Retry
+          </Button>
         </div>
       </div>
     );
@@ -65,7 +81,7 @@ const DashboardPage = () => {
 
   return (
     <div className="h-screen bg-background overflow-y-hidden flex flex-col">
-      <Header />
+      <Header onApplyFilters={handleAIFilters} currentFilters={filters} />
       <MobileOverlay />
       <div className="flex flex-1 overflow-hidden">
         <FilterPanel
@@ -74,7 +90,6 @@ const DashboardPage = () => {
           filters={filters}
           onFilterChange={handleFilterChange}
         />
-
         <ScrollArea className="h-[calc(100vh-80px)] flex-1">
           <main className="p-6 space-y-6">
             <SummaryPanel
@@ -82,25 +97,24 @@ const DashboardPage = () => {
               stats={stats}
               totalQuestions={allData.length}
             />
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <CategoryDistributionChart data={filteredData} stats={stats} />
               <DifficultyHeatmap data={filteredData} stats={stats} />
             </div>
-
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <ChapterWeightageChart data={filteredData} stats={stats} />
               <YearTrendChart data={filteredData} stats={stats} />
             </div>
-
             <div className="text-center py-4 border-t border-border">
               <p className="text-sm text-muted-foreground">
-                Data based on JEE Main pattern analysis (2021–2025) •{' '}
-                <span className="font-mono">{stats.totalQuestions}</span> of{' '}
-                <span className="font-mono">{allData.length}</span> questions selected
+                Data based on JEE Main pattern analysis (2021–2025) •{" "}
+                <span className="font-mono">{stats.totalQuestions}</span> of{" "}
+                <span className="font-mono">{allData.length}</span> questions
+                selected
               </p>
               <p className="text-xs text-muted-foreground mt-1">
-                This dashboard provides strategic insights only. No actual questions or solutions are displayed.
+                This dashboard provides strategic insights only. No actual
+                questions or solutions are displayed.
               </p>
             </div>
           </main>
@@ -119,11 +133,17 @@ function MobileOverlay() {
   return (
     <section className="fixed inset-0 bg-black/30 z-50 flex justify-center items-center">
       <div className="bg-white p-8 rounded-2xl shadow-lg w-[350px] flex flex-col gap-3 items-center">
-        <h1 className="text-xl font-semibold tracking-tight">Best Viewed on Desktop</h1>
+        <h1 className="text-xl font-semibold tracking-tight">
+          Best Viewed on Desktop
+        </h1>
         <p className="text-center text-[15px] text-neutral-700">
-          Switch to <span className="font-semibold text-neutral-800">Desktop Site</span> in your browser for the best experience.
+          Switch to{" "}
+          <span className="font-semibold text-neutral-800">Desktop Site</span>{" "}
+          in your browser for the best experience.
         </p>
-        <p className="text-sm text-neutral-600 my-4">Mobile responsiveness is coming soon!</p>
+        <p className="text-sm text-neutral-600 my-4">
+          Mobile responsiveness is coming soon!
+        </p>
         <Button
           className="w-full bg-ei-accent rounded-full text-white hover:bg-ei-accent-mid hover:-translate-y-[2px] transition-all duration-200"
           onClick={() => setDismissed(true)}
@@ -134,3 +154,4 @@ function MobileOverlay() {
     </section>
   );
 }
+  

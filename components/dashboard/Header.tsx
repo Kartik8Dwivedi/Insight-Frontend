@@ -1,12 +1,24 @@
-import { BarChart3, Info } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { BarChart3, Info } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { AISearchBar } from "@/components/dashboard/AISearchBar";
+import { FilterState } from "@/types";
 
-export const Header = () => {
+interface HeaderProps {
+  onApplyFilters: (filters: FilterState) => void;
+  currentFilters: FilterState;
+}
+
+export const Header = ({ onApplyFilters, currentFilters }: HeaderProps) => {
   return (
     <header className="bg-card border-b border-border px-6 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-4">
+        {/* Logo + title */}
+        <div className="flex items-center gap-3 flex-shrink-0">
           <div className="p-2 bg-primary/10 rounded-lg">
             <BarChart3 className="h-6 w-6 text-primary" />
           </div>
@@ -20,18 +32,24 @@ export const Header = () => {
           </div>
         </div>
 
+        {/* Right side: AI search + badges */}
         <div className="flex items-center gap-3">
+          <AISearchBar
+            onApplyFilters={onApplyFilters}
+            currentFilters={currentFilters}
+          />
+
           <Tooltip>
             <TooltipTrigger asChild>
               <Badge variant="outline" className="text-xs cursor-help">
                 <span className="w-2 h-2 rounded-full bg-chart-easy mr-1.5 animate-pulse-subtle" />
-                Beta Version
+                Beta
               </Badge>
             </TooltipTrigger>
             <TooltipContent>
               <p className="max-w-xs text-sm">
-                This dashboard shows aggregated analytics only. 
-                Actual questions and solutions are not displayed.
+                This dashboard shows aggregated analytics only. Actual questions
+                and solutions are not displayed.
               </p>
             </TooltipContent>
           </Tooltip>
@@ -44,8 +62,8 @@ export const Header = () => {
             </TooltipTrigger>
             <TooltipContent>
               <p className="max-w-xs text-sm">
-                Use the filters on the left to explore question patterns 
-                across domains, chapters, and years.
+                Use filters on the left or AI Search (⌘K) to explore question
+                patterns.
               </p>
             </TooltipContent>
           </Tooltip>
