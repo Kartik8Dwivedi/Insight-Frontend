@@ -1,55 +1,50 @@
-import { useMemo } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
-import { Lightbulb } from 'lucide-react';
-import { QuestionData } from '@/types';
-import { generateInsight } from '@/lib/analysis';
+import { useMemo } from "react";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from "recharts";
+import { Lightbulb } from "lucide-react";
+import { QuestionData, ComputedStats } from "@/types";
+import { generateInsight } from "@/lib/analysis";
 
 interface CategoryDistributionChartProps {
   data: QuestionData[];
-  stats?: any;
+  stats: ComputedStats;
 }
 
 const COLORS = {
-  Fact: 'hsl(192, 75%, 50%)',
-  Formula: 'hsl(260, 65%, 55%)',
-  Conceptual: 'hsl(330, 70%, 55%)',
+  Fact: "hsl(192, 75%, 50%)",
+  Formula: "hsl(260, 65%, 55%)",
+  Conceptual: "hsl(330, 70%, 55%)",
 };
 
-export const CategoryDistributionChart = ({ data, stats }: CategoryDistributionChartProps) => {
+export const CategoryDistributionChart = ({
+  data,
+  stats,
+}: CategoryDistributionChartProps) => {
   const chartData = useMemo(() => {
-    // Rely on pre-aggregated stats if available
-    if (stats?.categoryDistribution) {
-      const total = stats.totalQuestions || 1;
-      return stats.categoryDistribution.map((item: any) => ({
-        name: item._id || 'Unknown',
-        value: item.count,
-        percentage: Math.round((item.count / total) * 100),
-      }));
-    }
-
-    // Fallback for mock data testing
-    const counts = data.reduce((acc, item) => {
-      acc[item.category] = (acc[item.category] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
-
-    return Object.entries(counts).map(([name, value]) => ({
-      name,
-      value,
-      percentage: Math.round((value / data.length) * 100),
+    const total = stats.totalQuestions || 1;
+    return stats.categoryDistribution.map((item) => ({
+      name: item._id || "Unknown",
+      value: item.count,
+      percentage: Math.round((item.count / total) * 100),
     }));
-  }, [data, stats]);
+  }, [stats]);
 
-  const insight = useMemo(() => generateInsight(data, 'category'), [data]);
+  const insight = useMemo(() => generateInsight(data, "category"), [data]);
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload;
+      const d = payload[0].payload;
       return (
         <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
-          <p className="font-medium">{data.name}</p>
+          <p className="font-medium">{d.name}</p>
           <p className="text-sm text-muted-foreground">
-            {data.value} questions ({data.percentage}%)
+            {d.value} questions ({d.percentage}%)
           </p>
         </div>
       );
@@ -67,7 +62,7 @@ export const CategoryDistributionChart = ({ data, stats }: CategoryDistributionC
           </p>
         </div>
         <span className="text-xs font-mono text-muted-foreground">
-          n={stats?.totalQuestions || data.length}
+          n={stats.totalQuestions}
         </span>
       </div>
 
@@ -83,10 +78,13 @@ export const CategoryDistributionChart = ({ data, stats }: CategoryDistributionC
               paddingAngle={3}
               dataKey="value"
             >
-              {chartData.map((entry: any, index: number) => (
+              {chartData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COLORS[entry.name as keyof typeof COLORS] || COLORS.Conceptual}
+                  fill={
+                    COLORS[entry.name as keyof typeof COLORS] ||
+                    COLORS.Conceptual
+                  }
                   stroke="transparent"
                 />
               ))}
@@ -95,7 +93,7 @@ export const CategoryDistributionChart = ({ data, stats }: CategoryDistributionC
             <Legend
               verticalAlign="bottom"
               height={36}
-              formatter={(value:string) => (
+              formatter={(value: string) => (
                 <span className="text-sm text-foreground">{value}</span>
               )}
             />
@@ -106,7 +104,9 @@ export const CategoryDistributionChart = ({ data, stats }: CategoryDistributionC
       <div className="mt-4 p-3 bg-accent/50 rounded-lg border border-accent">
         <div className="flex gap-2">
           <Lightbulb className="h-4 w-4 text-accent-foreground mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-accent-foreground leading-relaxed">{insight}</p>
+          <p className="text-sm text-accent-foreground leading-relaxed">
+            {insight}
+          </p>
         </div>
       </div>
     </div>
