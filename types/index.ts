@@ -49,3 +49,38 @@ export interface ComputedStats {
   }>;
   yearTrend: Array<{ _id: { year: number; category: string }; count: number }>;
 }
+
+
+export type MockChatResponse = {
+  id: string
+  status: "pending"
+  userPrompt: string
+  llmResponse: null
+} | {
+  id: string
+  status: "success"
+  userPrompt: string
+  llmResponse: string
+} | {
+  id: string
+  status: "failed"
+  userPrompt: string
+  llmResponse: null
+}
+
+
+// Pre-computed stats shape returned by computeStats()
+export interface ComputedStats {
+  totalQuestions: number;
+  categoryDistribution: Array<{ _id: string; count: number }>;
+  difficultyDistribution: Array<{ _id: string; count: number }>;
+  chapterWeightage: Array<{
+    _id: { chapter: string; domain: string };
+    count: number;
+  }>;
+  categoryDifficultyDist: Array<{
+    _id: { category: string; difficulty: string };
+    count: number;
+  }>;
+  yearTrend: Array<{ _id: { year: number; category: string }; count: number }>;
+}

@@ -37,9 +37,9 @@ function Navbar() {
   return (
     <nav className={styles.nav}>
       <Link href="#" className={styles.navLogo}>
-        <span className={styles.navLogoIcon}>E</span> ExamIntel
+        <span className={styles.navLogoIcon}>E</span> Examsorbit
       </Link>
-      <Link prefetch href="/dashboard" className={styles.navCta}>
+      <Link target="blank" prefetch href="/dashboard" className={styles.navCta}>
         Open JEE Dashboard →
       </Link>
     </nav>
@@ -61,7 +61,7 @@ function HeroSection() {
         topics, and build a strategy grounded in real data.
       </p>
       <div className={styles.heroActions}>
-        <Link prefetch href="/dashboard" className={styles.btnPrimary}>
+        <Link target="blank" prefetch href="/dashboard" className={styles.btnPrimary}>
           Explore JEE Dashboard
           <ArrowIcon />
         </Link>
@@ -76,7 +76,7 @@ function HeroSection() {
 
 /* ─── Trust Bar ─── */
 
-const trustItems = ["Free to use", "2018–2024 data", "No signup needed"];
+const trustItems = ["Free to use", "2002–2025 data", "No signup needed"];
 
 function TrustBar() {
   return (
@@ -106,7 +106,7 @@ function DashboardPreview() {
           <div className={`${styles.dot} ${styles.dotR}`} />
           <div className={`${styles.dot} ${styles.dotY}`} />
           <div className={`${styles.dot} ${styles.dotG}`} />
-          <div className={styles.previewUrl}>examintel.in/jee-dashboard</div>
+          <div className={styles.previewUrl}>examsorbit.com/jee-dashboard</div>
         </div>
         <div className={styles.previewBody}>
           {/* Bar Chart Card */}
@@ -126,7 +126,7 @@ function DashboardPreview() {
           {/* Donut Chart Card */}
           <div className={styles.miniChartCard}>
             <div className={styles.miniChartLabel}>
-              Difficulty Trend 2018–2024
+              Difficulty Trend 2002–2025
             </div>
             <div className={styles.donutWrap}>
               <div className={styles.donut} />
@@ -164,8 +164,8 @@ function DashboardPreview() {
 /* ─── Stats Row ─── */
 
 const statsData = [
-  { num: "7+", label: "Years of JEE Data" },
-  { num: "3K+", label: "Questions Analyzed" },
+  { num: "23+", label: "Years of JEE Data" },
+  { num: "10K+", label: "Questions Analyzed" },
   { num: "100%", label: "Data-Driven Insights" },
   { num: "Free", label: "No Signup Required" },
 ];
@@ -204,7 +204,7 @@ const featuresData = [
   {
     icon: "🔍",
     title: "Previous Year Deep Dive",
-    desc: "Every question from 2018–2024 categorized and tagged — see the exact patterns, shifts, and recurring themes.",
+    desc: "Every question from 2002–2025 categorized and tagged — see the exact patterns, shifts, and recurring themes.",
   },
 ];
 
@@ -219,7 +219,7 @@ function FeaturesSection() {
       <p className={styles.sectionSub}>
         Data replaces guesswork. Clarity replaces anxiety.
       </p>
-      <div className={styles.featuresGrid}>
+      <div className="grid grid-cols-2 gap-2 mt-10">
         {featuresData.map((feature) => (
           <div key={feature.title} className={styles.featureCard}>
             <div className={styles.featureIcon}>{feature.icon}</div>
@@ -247,7 +247,7 @@ const examsData: ExamCardData[] = [
     icon: "📐",
     iconClass: styles.examIconJee,
     name: "JEE Exam Intelligence",
-    desc: "Chapter weightage · Difficulty distribution · Topic trends · 2018–2024",
+    desc: "Chapter weightage · Difficulty distribution · Topic trends · 2002–2025",
     live: true,
   },
   {
@@ -389,7 +389,7 @@ function ComingSoonSection() {
       style={{ paddingTop: 0 }}
     >
       <div className={styles.sectionTag}>Roadmap</div>
-      <h2 className={styles.sectionTitle}>More Exams Coming</h2>
+      <h2 className={styles.sectionTitle}>More Exams Coming Soon.</h2>
       <p className={styles.sectionSub}>
         We&apos;re building intelligence dashboards for every major competitive
         exam in India.
@@ -420,7 +420,7 @@ function CTASection() {
           Join students who prepare with clarity, not chaos. JEE Dashboard is
           live and free.
         </p>
-        <Link prefetch href="/dashboard" className={styles.btnWhite}>
+        <Link target="blank" prefetch href="/dashboard" className={styles.btnWhite}>
           Open JEE Dashboard — It&apos;s Free
           <ArrowIcon />
         </Link>
@@ -435,7 +435,7 @@ function Footer() {
   return (
     <footer className={styles.footer}>
       <p>
-        © 2024 ExamIntel · Built for JEE aspirants ·{" "}
+        © 2024 Examsorbit · Built for JEE aspirants ·{" "}
         <Link href="#">Privacy</Link> · <Link href="#">Contact</Link>
       </p>
     </footer>
@@ -446,7 +446,7 @@ function Footer() {
 
 function FloatingBar() {
   return (
-    <Link prefetch href="/dashboard" className={styles.floatingBar}>
+    <Link target="blank" prefetch href="/dashboard" className={styles.floatingBar}>
       Open JEE Dashboard — Free →
     </Link>
   );

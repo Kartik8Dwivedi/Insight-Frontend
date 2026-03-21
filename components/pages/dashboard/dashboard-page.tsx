@@ -11,10 +11,13 @@ import { SummaryPanel } from '@/components/dashboard/SummaryPanel';
 import { FilterState } from '@/types';
 import { defaultFilters, filterData, computeStats } from '@/lib/analysis';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Loader } from 'lucide-react';
+import styles from "./home.module.css";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { useAnalyticsData } from '@/hooks/useAnalyticsData';
-import { Loader, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 const DashboardPage = () => {
   const { allData, loading, error } = useAnalyticsData();
@@ -95,7 +98,7 @@ const DashboardPage = () => {
 
             <div className="text-center py-4 border-t border-border">
               <p className="text-sm text-muted-foreground">
-                Data based on JEE Main pattern analysis (2021–2025) •{' '}
+                Data based on JEE Main pattern analysis (2002–2025) •{' '}
                 <span className="font-mono">{stats.totalQuestions}</span> of{' '}
                 <span className="font-mono">{allData.length}</span> questions selected
               </p>
@@ -104,6 +107,7 @@ const DashboardPage = () => {
               </p>
             </div>
           </main>
+          <GoToFeedbackLink />
         </ScrollArea>
       </div>
     </div>
@@ -132,5 +136,35 @@ function MobileOverlay() {
         </Button>
       </div>
     </section>
-  );
+  )
+}
+
+const ArrowIcon = () => (
+  <svg
+    className='group-hover:translate-x-1 duration-200 transition-all'
+    width="16"
+    height="16"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+    viewBox="0 0 24 24"
+  >
+    <path d="M5 12h14M12 5l7 7-7 7" />
+  </svg>
+);
+
+function GoToFeedbackLink() {
+  return <div className='w-fit max-w-[95%] mb-5 mx-auto p-4 flex flex-col items-center border-2 border-ei-accent rounded-2xl'>
+    <h4 className='font-medium'>Help us improve your experience.</h4>
+    <p className='text-sm font-medium text-neutral-500 mb-3 text-center'>Found a bug? Have a suggestion or Feature Request? Share your thoughts with us.</p>
+    <Link
+      href={"/"}
+      className='group bg-ei-accent text-white border-none py-[7px] px-[20px] rounded-full text-sm font-semibold cursor-pointer no-underline inline-flex items-center gap-2 transition-all
+        duration-200 ease-linear shadow-[0_4px_20px_rgba(79,70,229,0.35)] hover:-translate-y-0.5 
+     '>
+      Give Feedback
+      <ArrowIcon />
+
+    </Link>
+  </div>
 }
