@@ -32,3 +32,21 @@ export interface FilterState {
   difficulties: string[];
   yearRange: [number, number];
 }
+
+
+export type MockChatResponse = {
+  id: string
+  status: "pending"
+  userPrompt: string
+  llmResponse: null
+} | {
+  id: string
+  status: "success"
+  userPrompt: string
+  llmResponse: string
+} | {
+  id: string
+  status: "failed"
+  userPrompt: string
+  llmResponse: null
+}

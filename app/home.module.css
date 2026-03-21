@@ -20,7 +20,7 @@
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.10), 0 4px 12px rgba(0, 0, 0, 0.06);
   --radius: 16px;
 
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'IBM plex sans', sans-serif;
   background: var(--cream);
   color: var(--ink);
   line-height: 1.6;
@@ -72,7 +72,7 @@
 }
 
 .navLogo {
-  font-family: 'Fraunces', serif;
+  font-family: 'IBM plex sans', serif;
   font-size: 1.3rem;
   font-weight: 700;
   color: var(--ink);
@@ -101,7 +101,7 @@
   border: none;
   padding: 8px 16px;
   border-radius: 100px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'IBM plex sans', sans-serif;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -171,7 +171,7 @@
 }
 
 .heroTitle {
-  font-family: 'Fraunces', serif;
+  font-family: 'IBM plex sans', serif;
   font-size: clamp(2.4rem, 6vw, 3.6rem);
   font-weight: 700;
   line-height: 1.15;
@@ -212,7 +212,7 @@
   border: none;
   padding: 14px 28px;
   border-radius: 100px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'IBM plex sans', sans-serif;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -243,7 +243,7 @@
   border: 1.5px solid var(--border);
   padding: 14px 28px;
   border-radius: 100px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'IBM plex sans', sans-serif;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
@@ -480,7 +480,7 @@
 }
 
 .statNum {
-  font-family: 'Fraunces', serif;
+  font-family: 'IBM plex sans', serif;
   font-size: 2rem;
   font-weight: 700;
   color: var(--accent);
@@ -520,7 +520,7 @@
 }
 
 .sectionTitle {
-  font-family: 'Fraunces', serif;
+  font-family: 'IBM plex sans', serif;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   font-weight: 700;
   line-height: 1.2;
@@ -640,6 +640,7 @@
 
 .examCardLeft {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 16px;
 }
@@ -838,7 +839,7 @@
 }
 
 .ctaTitle {
-  font-family: 'Fraunces', serif;
+  font-family: 'IBM plex sans', serif;
   font-size: clamp(1.6rem, 4vw, 2.2rem);
   font-weight: 700;
   line-height: 1.2;
@@ -857,7 +858,7 @@
   color: var(--accent);
   padding: 14px 32px;
   border-radius: 100px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'IBM plex sans', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   text-decoration: none;
