@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ChevronRight,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { FilterState } from "@/types";
 import { defaultFilters } from "@/lib/analysis";
 
@@ -181,22 +182,26 @@ export function AISearchBar({
       {/* Backdrop */}
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-start justify-center pt-[12vh]"
-          style={{ background: "rgba(0,0,0,0.4)", backdropFilter: "blur(2px)" }}
+          className="fixed inset-0 z-50 flex items-start justify-center pt-[12vh] px-4"
+          style={{ 
+            background: "rgba(15, 17, 23, 0.6)", 
+            backdropFilter: "blur(6px)",
+            transition: "all 0.2s ease-out"
+          }}
         >
           <div
             ref={modalRef}
-            className="w-full max-w-xl mx-4 rounded-2xl shadow-2xl overflow-hidden"
+            className="w-full max-w-xl rounded-2xl shadow-[0_20px_70px_rgba(0,0,0,0.3)] overflow-hidden border animate-in fade-in zoom-in-95 duration-200"
             style={{
-              background: "var(--color-background-primary)",
-              border: "1px solid var(--color-border-secondary)",
+              background: "var(--ei-white)",
+              borderColor: "var(--ei-border)",
             }}
           >
             {/* Search input */}
             <form
               onSubmit={handleSubmit}
-              className="flex items-center gap-3 px-4 py-3 border-b"
-              style={{ borderColor: "var(--color-border-tertiary)" }}
+              className="flex items-center gap-3 px-5 py-4 border-b"
+              style={{ borderColor: "var(--ei-border)" }}
             >
               <div className="flex-shrink-0">
                 {loading ? (
@@ -382,25 +387,25 @@ export function AISearchBar({
                       )}
 
                       {/* Apply button */}
-                      <div className="flex gap-2 pt-1">
-                        <button
+                      <div className="flex gap-3 pt-2">
+                        <Button
                           onClick={handleApply}
-                          className="flex-1 py-2 px-4 rounded-xl text-sm font-medium text-white transition-all hover:opacity-90 active:scale-[0.98]"
-                          style={{ background: "var(--color-text-info)" }}
+                          className="flex-1 rounded-xl bg-ei-accent text-white hover:bg-ei-accent-mid hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 font-semibold"
                         >
+                          <Sparkles className="w-4 h-4 mr-2 opacity-80" />
                           Apply filters to dashboard
-                        </button>
-                        <button
+                        </Button>
+                        <Button
+                          variant="outline"
                           onClick={() => {
                             setResult(null);
                             setQuery("");
                             inputRef.current?.focus();
                           }}
-                          className="px-4 py-2 rounded-xl text-sm transition-colors hover:bg-muted/50"
-                          style={{ color: "var(--color-text-secondary)" }}
+                          className="rounded-xl border-ei-border hover:bg-muted/50 text-muted-foreground"
                         >
                           Clear
-                        </button>
+                        </Button>
                       </div>
                     </>
                   )}

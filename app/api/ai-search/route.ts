@@ -386,10 +386,10 @@ Respond ONLY with a valid JSON object in this exact format (no markdown, no expl
 If noMatch is true (query is irrelevant or impossible to map), set all filter arrays to empty, noMatch to true, and noMatchMessage to a friendly explanation.`;
 
 export async function POST(req: NextRequest) {
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+  const apiKey = process.env.GOOGLE_GENERATIVE_AI_API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) {
     return NextResponse.json(
-      { error: "API key not configured" },
+      { error: "Gemini API key not configured" },
       { status: 503 },
     );
   }
@@ -399,38 +399,41 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "No query provided" }, { status: 400 });
   }
 
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-api-key": apiKey,
-      "anthropic-version": "2023-06-01",
-    },
-    body: JSON.stringify({
-      model: "claude-haiku-4-5-20251001", // Haiku: fast + cheap for this structured task
-      max_tokens: 400,
-      system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: query.trim() }],
-    }),
-  });
-
-  if (!response.ok) {
-    return NextResponse.json({ error: "AI service error", raw: await response.text() }, { status: 502 });
-  }
-
-  const data = await response.json();
-  const raw = data.content?.[0]?.text ?? "";
-
   try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: query.trim() }] }],
+          system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+          generationConfig: {
+            response_mime_type: "application/json",
+          },
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      return NextResponse.json({ error: "Gemini AI service error", raw: errorText }, { status: 502 });
+    }
+
+    const data = await response.json();
+    const raw = data.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+
     const parsed = JSON.parse(raw);
     // Ensure yearRange always has valid values
     if (!parsed.filters.yearRange || parsed.filters.yearRange.length !== 2) {
       parsed.filters.yearRange = [2021, 2025];
     }
     return NextResponse.json(parsed);
-  } catch {
+  } catch (error: any) {
     return NextResponse.json(
-      { error: "Failed to parse AI response", raw },
+      { error: "Failed to parse AI response", message: error.message },
       { status: 500 },
     );
   }
