@@ -1,12 +1,19 @@
-import { useMemo } from 'react';
-import { TrendingUp, Target, Zap, BookOpen, AlertTriangle, Award } from 'lucide-react';
-import { QuestionData } from '@/types';
-import { Badge } from '@/components/ui/badge';
+import { useMemo } from "react";
+import {
+  TrendingUp,
+  Target,
+  Zap,
+  BookOpen,
+  AlertTriangle,
+  Award,
+} from "lucide-react";
+import { QuestionData, ComputedStats } from "@/types";
+import { Badge } from "@/components/ui/badge";
 
 interface SummaryPanelProps {
   data: QuestionData[];
   totalQuestions: number;
-  stats?: any;
+  stats: ComputedStats;
 }
 
 interface InsightCard {
@@ -14,135 +21,108 @@ interface InsightCard {
   title: string;
   value: string;
   description: string;
-  type: 'info' | 'success' | 'warning';
+  type: "info" | "success" | "warning";
 }
 
-export const SummaryPanel = ({ data, totalQuestions, stats }: SummaryPanelProps) => {
+export const SummaryPanel = ({
+  data,
+  totalQuestions,
+  stats,
+}: SummaryPanelProps) => {
   const insights = useMemo((): InsightCard[] => {
-    if (data.length === 0 && (!stats || stats.totalQuestions === 0)) {
-      return [{
-        icon: <AlertTriangle className="h-5 w-5" />,
-        title: 'No Data',
-        value: '0 questions',
-        description: 'Adjust filters to see insights',
-        type: 'warning',
-      }];
+    if (stats.totalQuestions === 0) {
+      return [
+        {
+          icon: <AlertTriangle className="h-5 w-5" />,
+          title: "No Data",
+          value: "0 questions",
+          description: "Adjust filters to see insights",
+          type: "warning",
+        },
+      ];
     }
 
-    let topCategory = ['N/A', 0];
-    let topDifficulty = ['Medium', 0];
-    let topChapter = ['N/A', 0];
-    let totalQs = data.length || 1;
-    let highROIChapters: string[] = [];
-    let conceptualHardPercentage = 0;
+    const totalQs = stats.totalQuestions;
 
-    if (stats) {
-      totalQs = stats.totalQuestions || 1;
-      // Get Top Category
-      if (stats.categoryDistribution?.length) {
-        const sortedCats = [...stats.categoryDistribution].sort((a: any, b: any) => b.count - a.count);
-        topCategory = [sortedCats[0]._id || 'Conceptual', sortedCats[0].count];
-      }
-      // Get Top Difficulty
-      if (stats.difficultyDistribution?.length) {
-        const sortedDiffs = [...stats.difficultyDistribution].sort((a: any, b: any) => b.count - a.count);
-        topDifficulty = [sortedDiffs[0]._id || 'Medium', sortedDiffs[0].count];
-      }
-      // Get Top Chapter
-      if (stats.chapterWeightage?.length) {
-        topChapter = [stats.chapterWeightage[0]._id.chapter, stats.chapterWeightage[0].count];
-        highROIChapters = stats.chapterWeightage
-          .filter((ch: any) => (ch.count / totalQs) * 100 > 8)
-          .map((ch: any) => ch._id.chapter);
-      }
-      // Get Conceptual + Hard
-      if (stats.categoryDifficultyDist?.length) {
-        const hardConcept = stats.categoryDifficultyDist.find(
-          (d: any) => d._id.category === 'Conceptual' && d._id.difficulty === 'Hard'
-        );
-        conceptualHardPercentage = Math.round(((hardConcept?.count || 0) / totalQs) * 100);
-      }
-    } else {
-      // Fallback local calculations
-      const localCategoryCount = data.reduce((acc, item) => {
-        acc[item.category] = (acc[item.category] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+    const sortedCats = [...stats.categoryDistribution].sort(
+      (a, b) => b.count - a.count,
+    );
+    const topCategory = sortedCats[0] ?? { _id: "Conceptual", count: 0 };
 
-      const localDifficultyCount = data.reduce((acc, item) => {
-        acc[item.difficulty] = (acc[item.difficulty] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+    const sortedDiffs = [...stats.difficultyDistribution].sort(
+      (a, b) => b.count - a.count,
+    );
+    const topDifficulty = sortedDiffs[0] ?? { _id: "Medium", count: 0 };
 
-      const localChapterCount = data.reduce((acc, item) => {
-        acc[item.chapter] = (acc[item.chapter] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+    const topChapter = stats.chapterWeightage[0] ?? {
+      _id: { chapter: "N/A" },
+      count: 0,
+    };
 
-      topCategory = Object.entries(localCategoryCount).sort((a, b) => b[1] - a[1])[0] || topCategory;
-      topDifficulty = Object.entries(localDifficultyCount).sort((a, b) => b[1] - a[1])[0] || topDifficulty;
-      topChapter = Object.entries(localChapterCount).sort((a, b) => b[1] - a[1])[0] || topChapter;
+    const highROIChapters = stats.chapterWeightage
+      .filter((ch) => (ch.count / totalQs) * 100 > 8)
+      .map((ch) => ch._id.chapter);
 
-      const conceptualHardCount = data.filter(
-        d => d.category === 'Conceptual' && d.difficulty === 'Hard'
-      ).length;
-      conceptualHardPercentage = Math.round((conceptualHardCount / data.length) * 100);
-
-      highROIChapters = Object.entries(localChapterCount)
-        .filter(([_, count]: [string, unknown]) => ((count as number) / data.length) * 100 > 8)
-        .map(([name]) => name);
-    }
+    const hardConcept = stats.categoryDifficultyDist.find(
+      (d) => d._id.category === "Conceptual" && d._id.difficulty === "Hard",
+    );
+    const conceptualHardPercentage = Math.round(
+      ((hardConcept?.count ?? 0) / totalQs) * 100,
+    );
 
     const results: InsightCard[] = [
       {
         icon: <TrendingUp className="h-5 w-5" />,
-        title: 'Dominant Category',
-        value: `${topCategory[0]}`,
-        description: `${Math.round((Number(topCategory[1]) / totalQs) * 100)}% of questions are ${String(topCategory[0]).toLowerCase()}`,
-        type: 'info',
+        title: "Dominant Category",
+        value: topCategory._id,
+        description: `${Math.round((topCategory.count / totalQs) * 100)}% of questions are ${topCategory._id.toLowerCase()}`,
+        type: "info",
       },
       {
         icon: <Target className="h-5 w-5" />,
-        title: 'Difficulty Profile',
-        value: `${topDifficulty[0]} Level`,
-        description: `${Math.round((Number(topDifficulty[1]) / totalQs) * 100)}% questions at ${String(topDifficulty[0]).toLowerCase()} difficulty`,
-        type: topDifficulty[0] === 'Hard' ? 'warning' : 'success',
+        title: "Difficulty Profile",
+        value: `${topDifficulty._id} Level`,
+        description: `${Math.round((topDifficulty.count / totalQs) * 100)}% questions at ${topDifficulty._id.toLowerCase()} difficulty`,
+        type: topDifficulty._id === "Hard" ? "warning" : "success",
       },
       {
         icon: <BookOpen className="h-5 w-5" />,
-        title: 'Top Chapter',
-        value: String(topChapter[0]),
-        description: `${Math.round((Number(topChapter[1]) / totalQs) * 100)}% weightage - prioritize this chapter`,
-        type: 'success',
+        title: "Top Chapter",
+        value: topChapter._id.chapter,
+        description: `${Math.round((topChapter.count / totalQs) * 100)}% weightage — prioritize this chapter`,
+        type: "success",
       },
       {
         icon: <Zap className="h-5 w-5" />,
-        title: 'Conceptual + Hard',
+        title: "Conceptual + Hard",
         value: `${conceptualHardPercentage}%`,
-        description: conceptualHardPercentage > 15 
-          ? 'High focus on deep understanding required'
-          : 'Moderate conceptual difficulty',
-        type: conceptualHardPercentage > 20 ? 'warning' : 'info',
+        description:
+          conceptualHardPercentage > 15
+            ? "High focus on deep understanding required"
+            : "Moderate conceptual difficulty",
+        type: conceptualHardPercentage > 20 ? "warning" : "info",
       },
     ];
 
     if (highROIChapters.length > 0) {
       results.push({
         icon: <Award className="h-5 w-5" />,
-        title: 'High ROI Chapters',
+        title: "High ROI Chapters",
         value: `${highROIChapters.length} chapters`,
-        description: highROIChapters.slice(0, 2).join(', ') + (highROIChapters.length > 2 ? '...' : ''),
-        type: 'success',
+        description:
+          highROIChapters.slice(0, 2).join(", ") +
+          (highROIChapters.length > 2 ? "…" : ""),
+        type: "success",
       });
     }
 
     return results;
-  }, [data, stats]);
+  }, [stats]);
 
   const typeStyles = {
-    info: 'bg-accent border-accent text-accent-foreground',
-    success: 'bg-chart-easy/10 border-chart-easy/20 text-chart-easy',
-    warning: 'bg-chart-medium/10 border-chart-medium/20 text-chart-hard',
+    info: "bg-accent border-accent text-accent-foreground",
+    success: "bg-chart-easy/10 border-chart-easy/20 text-chart-easy",
+    warning: "bg-chart-medium/10 border-chart-medium/20 text-chart-hard",
   };
 
   return (
@@ -155,7 +135,7 @@ export const SummaryPanel = ({ data, totalQuestions, stats }: SummaryPanelProps)
           </p>
         </div>
         <Badge variant="secondary" className="font-mono">
-          {data.length} / {totalQuestions} questions
+          {stats.totalQuestions} / {totalQuestions} questions
         </Badge>
       </div>
 

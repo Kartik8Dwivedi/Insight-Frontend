@@ -1,12 +1,20 @@
-import { useState, useMemo } from 'react';
-import { Filter, X, ChevronDown, ChevronUp } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Slider } from '@/components/ui/slider';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { FilterState } from '@/types';
+import { useState, useMemo } from "react";
+import { Filter, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Slider } from "@/components/ui/slider";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { FilterState } from "@/types";
+import { defaultFilters } from "@/lib/analysis";
+
+const YEAR_MIN = 2021;
+const YEAR_MAX = 2025;
 
 interface FilterPanelProps {
   chapters: Record<string, string[]>;
@@ -39,7 +47,11 @@ const FilterSection = ({
   };
 
   return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} className="filter-section">
+    <Collapsible
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      className="filter-section"
+    >
       <CollapsibleTrigger className="flex items-center justify-between w-full py-2 hover:bg-muted/50 rounded px-2 -mx-2">
         <span className="filter-label">{title}</span>
         {isOpen ? (
@@ -73,43 +85,44 @@ const FilterSection = ({
   );
 };
 
-export const FilterPanel = ({ chapters, topics, filters, onFilterChange }: FilterPanelProps) => {
+export const FilterPanel = ({
+  chapters,
+  topics,
+  filters,
+  onFilterChange,
+}: FilterPanelProps) => {
   const domainColors: Record<string, string> = {
-    Physics: 'hsl(220, 80%, 55%)',
-    Chemistry: 'hsl(150, 60%, 45%)',
-    Maths: 'hsl(280, 70%, 55%)',
+    Physics: "hsl(220, 80%, 55%)",
+    Chemistry: "hsl(150, 60%, 45%)",
+    Maths: "hsl(280, 70%, 55%)",
   };
 
   const categoryColors: Record<string, string> = {
-    Fact: 'hsl(192, 75%, 50%)',
-    Formula: 'hsl(260, 65%, 55%)',
-    Conceptual: 'hsl(330, 70%, 55%)',
+    Fact: "hsl(192, 75%, 50%)",
+    Formula: "hsl(260, 65%, 55%)",
+    Conceptual: "hsl(330, 70%, 55%)",
   };
 
   const difficultyColors: Record<string, string> = {
-    Easy: 'hsl(150, 70%, 45%)',
-    Medium: 'hsl(45, 90%, 50%)',
-    Hard: 'hsl(0, 75%, 55%)',
+    Easy: "hsl(150, 70%, 45%)",
+    Medium: "hsl(45, 90%, 50%)",
+    Hard: "hsl(0, 75%, 55%)",
   };
 
   const availableChapters = useMemo(() => {
-    let list: string[] = [];
-    if (filters.domains.length === 0) {
-      list = Object.values(chapters).flat();
-    } else {
-      list = filters.domains.flatMap((domain) => chapters[domain] || []);
-    }
-    return Array.from(new Set(list)); // Deduplicate
+    const list =
+      filters.domains.length === 0
+        ? Object.values(chapters).flat()
+        : filters.domains.flatMap((d) => chapters[d] || []);
+    return Array.from(new Set(list)).sort();
   }, [filters.domains, chapters]);
 
   const availableTopics = useMemo(() => {
-    let list: string[] = [];
-    if (filters.chapters.length === 0) {
-      list = Object.values(topics).flat();
-    } else {
-      list = filters.chapters.flatMap((chapter) => topics[chapter] || []);
-    }
-    return Array.from(new Set(list)); // Deduplicate
+    const list =
+      filters.chapters.length === 0
+        ? Object.values(topics).flat()
+        : filters.chapters.flatMap((ch) => topics[ch] || []);
+    return Array.from(new Set(list)).sort();
   }, [filters.chapters, topics]);
 
   const activeFilterCount = useMemo(() => {
@@ -119,20 +132,13 @@ export const FilterPanel = ({ chapters, topics, filters, onFilterChange }: Filte
       filters.topics.length +
       filters.categories.length +
       filters.difficulties.length +
-      (filters.yearRange[0] !== 2019 || filters.yearRange[1] !== 2024 ? 1 : 0)
+      (filters.yearRange[0] !== YEAR_MIN || filters.yearRange[1] !== YEAR_MAX
+        ? 1
+        : 0)
     );
   }, [filters]);
 
-  const clearAllFilters = () => {
-    onFilterChange({
-      domains: [],
-      chapters: [],
-      topics: [],
-      categories: [],
-      difficulties: [],
-      yearRange: [2019, 2024],
-    });
-  };
+  const clearAllFilters = () => onFilterChange(defaultFilters);
 
   return (
     <div className="w-72 sticky top-0 bg-card border-r border-border flex flex-col h-[calc(100vh-80px)] overflow-y-scroll">
@@ -165,9 +171,11 @@ export const FilterPanel = ({ chapters, topics, filters, onFilterChange }: Filte
         <div className="space-y-6">
           <FilterSection
             title="Domain"
-            items={['Physics', 'Chemistry', 'Maths']}
+            items={["Physics", "Chemistry", "Maths"]}
             selected={filters.domains}
-            onChange={(domains) => onFilterChange({ ...filters, domains, chapters: [], topics: [] })}
+            onChange={(domains) =>
+              onFilterChange({ ...filters, domains, chapters: [], topics: [] })
+            }
             colorMap={domainColors}
           />
 
@@ -175,10 +183,12 @@ export const FilterPanel = ({ chapters, topics, filters, onFilterChange }: Filte
             title="Chapter"
             items={availableChapters}
             selected={filters.chapters}
-            onChange={(chapters) => onFilterChange({ ...filters, chapters, topics: [] })}
+            onChange={(chapters) =>
+              onFilterChange({ ...filters, chapters, topics: [] })
+            }
           />
 
-          {availableTopics.length > 0 && filters.chapters.length > 0 && (
+          {filters.chapters.length > 0 && availableTopics.length > 0 && (
             <FilterSection
               title="Topic"
               items={availableTopics}
@@ -189,36 +199,48 @@ export const FilterPanel = ({ chapters, topics, filters, onFilterChange }: Filte
 
           <FilterSection
             title="Category"
-            items={['Fact', 'Formula', 'Conceptual']}
+            items={["Fact", "Formula", "Conceptual"]}
             selected={filters.categories}
-            onChange={(categories) => onFilterChange({ ...filters, categories })}
+            onChange={(categories) =>
+              onFilterChange({ ...filters, categories })
+            }
             colorMap={categoryColors}
           />
 
           <FilterSection
             title="Difficulty"
-            items={['Easy', 'Medium', 'Hard']}
+            items={["Easy", "Medium", "Hard"]}
             selected={filters.difficulties}
-            onChange={(difficulties) => onFilterChange({ ...filters, difficulties })}
+            onChange={(difficulties) =>
+              onFilterChange({ ...filters, difficulties })
+            }
             colorMap={difficultyColors}
           />
 
           <div className="filter-section">
-            <label className="filter-label block mb-3">Year Range</label>
+            <label className="filter-label block mb-3">
+              Year Range
+              <span className="ml-2 font-mono text-xs text-muted-foreground">
+                {filters.yearRange[0]}–{filters.yearRange[1]}
+              </span>
+            </label>
             <div className="px-2">
               <Slider
                 value={filters.yearRange}
                 onValueChange={(value) =>
-                  onFilterChange({ ...filters, yearRange: value as [number, number] })
+                  onFilterChange({
+                    ...filters,
+                    yearRange: value as [number, number],
+                  })
                 }
-                min={2019}
-                max={2024}
+                min={YEAR_MIN}
+                max={YEAR_MAX}
                 step={1}
                 className="mb-2"
               />
               <div className="flex justify-between text-xs text-muted-foreground font-mono">
-                <span>{filters.yearRange[0]}</span>
-                <span>{filters.yearRange[1]}</span>
+                <span>{YEAR_MIN}</span>
+                <span>{YEAR_MAX}</span>
               </div>
             </div>
           </div>
