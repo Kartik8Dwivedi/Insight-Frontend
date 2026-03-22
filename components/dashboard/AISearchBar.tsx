@@ -157,27 +157,27 @@ export function AISearchBar({
   return (
     <>
       {/* Trigger button in header */}
-      <button
-        onClick={() => setOpen(true)}
-        className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm transition-all duration-150 hover:border-primary/50 hover:bg-primary/5 group"
-        style={{
-          borderColor: "var(--color-border-tertiary)",
-          color: "var(--color-text-secondary)",
-          background: "var(--color-background-secondary)",
-        }}
-      >
-        <Sparkles className="w-3.5 h-3.5 text-primary" />
-        <span className="hidden sm:inline">AI Search</span>
-        <kbd
-          className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-xs font-mono"
-          style={{
-            background: "var(--color-background-tertiary)",
-            color: "var(--color-text-tertiary)",
-          }}
+      <div className="aurora-glow-container">
+        <div className="aurora-glow"></div>
+        <button
+          onClick={() => setOpen(true)}
+          className="btn-aurora text-sm"
+          style={{ color: "var(--ei-ink-soft)" }}
         >
-          ⌘K
-        </kbd>
-      </button>
+          <Sparkles className="ai-icon-pulse text-[#6c47ff]" />
+          <span className="hidden sm:inline">AI Search</span>
+          <kbd
+            className="hidden sm:inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-mono ml-1"
+            style={{
+              background: "rgba(0,0,0,0.04)",
+              color: "var(--ei-ink-muted)",
+              border: "1px solid rgba(0,0,0,0.06)",
+            }}
+          >
+            ⌘K
+          </kbd>
+        </button>
+      </div>
 
       {/* Backdrop */}
       {open && (

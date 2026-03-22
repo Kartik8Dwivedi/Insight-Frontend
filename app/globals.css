@@ -211,6 +211,83 @@
   .gradient-text {
     @apply bg-gradient-to-r from-primary to-accent-foreground bg-clip-text text-transparent;
   }
+
+  /* Aurora Glow Button Styles */
+  .btn-aurora {
+    @apply relative z-10 flex items-center gap-2 px-4 py-2 rounded-full cursor-pointer font-bold transition-all duration-300;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(12px);
+    border: none;
+    outline: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05), inset 0 1px 1px rgba(255, 255, 255, 1);
+  }
+
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
+  }
+
+  @keyframes aurora-spin {
+    to { --angle: 360deg; }
+  }
+
+  .btn-aurora::before {
+    content: '';
+    @apply absolute -inset-[1.5px] rounded-full -z-10;
+    background: conic-gradient(
+      from var(--angle, 0deg),
+      #6c47ff, #00d4b4, #ff6c3c, #ff3c9d, #6c47ff
+    );
+    animation: aurora-spin 3s linear infinite;
+    opacity: 0.6;
+  }
+
+  .btn-aurora::after {
+    content: '';
+    @apply absolute inset-[1px] rounded-full -z-10;
+    background: white;
+  }
+
+  .btn-aurora:hover {
+    @apply -translate-y-0.5 scale-[1.02];
+  }
+
+  .btn-aurora:hover::before {
+    @apply opacity-100;
+    animation-duration: 2s;
+  }
+
+  .aurora-glow-container {
+    @apply relative inline-flex;
+  }
+
+  .aurora-glow {
+    @apply absolute -inset-4 rounded-full -z-20 blur-xl opacity-0 transition-opacity duration-300;
+    background: conic-gradient(
+      from var(--angle, 0deg),
+      rgba(108, 71, 255, 0.3),
+      rgba(0, 212, 180, 0.2),
+      rgba(255, 108, 60, 0.15),
+      rgba(255, 60, 157, 0.2),
+      rgba(108, 71, 255, 0.3)
+    );
+    animation: aurora-spin 3s linear infinite;
+  }
+
+  .aurora-glow-container:hover .aurora-glow {
+    @apply opacity-100;
+  }
+
+  .ai-icon-pulse {
+    @apply w-4 h-4;
+    animation: ai-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes ai-pulse {
+    0%, 100% { filter: drop-shadow(0 0 2px rgba(108, 71, 255, 0.5)); }
+    50% { filter: drop-shadow(0 0 6px rgba(0, 212, 180, 0.7)); }
+  }
 }
 
 #root {
