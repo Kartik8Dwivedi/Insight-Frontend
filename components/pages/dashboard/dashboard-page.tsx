@@ -18,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import Link from 'next/link';
 import { useAnalyticsData } from "@/hooks/useAnalyticsData";
 import { AlertCircle } from "lucide-react";
+import { FeedbackForm } from "@/components/dashboard/FeedbackForm";
 
 const DashboardPage = () => {
   const { allData, loading, error } = useAnalyticsData();
@@ -124,7 +125,7 @@ const DashboardPage = () => {
               </p>
             </div>
           </main>
-          <GoToFeedbackLink />
+          <FeedbackComponent />
         </ScrollArea>
       </div>
     </div>
@@ -176,7 +177,7 @@ const ArrowIcon = () => (
   </svg>
 );
 
-function GoToFeedbackLink() {
+function FeedbackComponentGoogleForm() {
   return <div className='w-fit max-w-[95%] mb-5 mx-auto p-4 flex flex-col items-center border-2 border-ei-accent rounded-2xl'>
     <h4 className='font-medium'>Help us improve your experience.</h4>
     <p className='text-sm font-medium text-neutral-500 mb-3 text-center'>Found a bug? Have a suggestion or Feature Request? Share your thoughts with us.</p>
@@ -191,4 +192,11 @@ function GoToFeedbackLink() {
     </Link>
   </div>
 }
-  
+
+function FeedbackComponent() {
+  return <div className='w-fit max-w-[95%] mb-5 mx-auto p-4 flex flex-col items-center border-2 border-ei-accent rounded-2xl'>
+    <h4 className='font-medium'>Help us improve your experience.</h4>
+    <p className='text-sm font-medium text-neutral-500 mb-3 text-center'>Found a bug? Have a suggestion or Feature Request? Share your thoughts with us.</p>
+    <FeedbackForm />
+  </div>
+}
