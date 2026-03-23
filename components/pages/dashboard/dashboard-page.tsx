@@ -8,6 +8,7 @@ import { DifficultyHeatmap } from "@/components/dashboard/DifficultyHeatmap";
 import { ChapterWeightageChart } from "@/components/dashboard/ChapterWeightageChart";
 import { YearTrendChart } from "@/components/dashboard/YearTrendChart";
 import { SummaryPanel } from "@/components/dashboard/SummaryPanel";
+import { FeedbackModal } from "@/components/dashboard/FeedbackModal";
 import { FilterState } from "@/types";
 import { defaultFilters, filterData, computeStats } from "@/lib/analysis";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -16,11 +17,16 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useAnalyticsData } from "@/hooks/useAnalyticsData";
+import { useTracker } from "@/hooks/useTracker";
 import { AlertCircle } from "lucide-react";
 
 const DashboardPage = () => {
   const { allData, loading, error } = useAnalyticsData();
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  const { trackFilterUsed, trackAISearch, trackFeedbackOpened } =
+    useTracker("dashboard");
 
   const { chapters, topics } = useMemo(() => {
     const chapters: Record<string, string[]> = {};
@@ -42,20 +48,35 @@ const DashboardPage = () => {
   );
   const stats = useMemo(() => computeStats(filteredData), [filteredData]);
 
-  // Sum of all history[] lengths = 15,645 actual question appearances, not 305 topic records
+  // Sum of all history[] lengths = actual question appearances (15,645), not topic records (305)
   const totalOccurrences = useMemo(
     () => allData.reduce((sum, q) => sum + q.history.length, 0),
     [allData],
   );
 
   const handleFilterChange = useCallback(
-    (next: FilterState) => setFilters(next),
-    [],
+    (next: FilterState) => {
+      // Track which filter changed
+      const changed = (Object.keys(next) as (keyof FilterState)[]).find((k) => {
+        const a = JSON.stringify(next[k]);
+        const b = JSON.stringify(filters[k]);
+        return a !== b;
+      });
+      if (changed)
+        trackFilterUsed(changed, JSON.stringify(next[changed]).slice(0, 60));
+      setFilters(next);
+    },
+    [filters, trackFilterUsed],
   );
-  const handleAIFilters = useCallback(
-    (aiFilters: FilterState) => setFilters(aiFilters),
-    [],
-  );
+
+  const handleAIFilters = useCallback((aiFilters: FilterState) => {
+    setFilters(aiFilters);
+  }, []);
+
+  const handleOpenFeedback = useCallback(() => {
+    trackFeedbackOpened();
+    setFeedbackOpen(true);
+  }, [trackFeedbackOpened]);
 
   if (loading) {
     return (
@@ -87,6 +108,11 @@ const DashboardPage = () => {
     <div className="h-screen bg-background overflow-y-hidden flex flex-col">
       <Header onApplyFilters={handleAIFilters} currentFilters={filters} />
       <MobileOverlay />
+      <FeedbackModal
+        open={feedbackOpen}
+        onClose={() => setFeedbackOpen(false)}
+      />
+
       <div className="flex flex-1 overflow-hidden">
         <FilterPanel
           chapters={chapters}
@@ -127,7 +153,7 @@ const DashboardPage = () => {
               </p>
             </div>
           </main>
-          <GoToFeedbackLink />
+          <GoToFeedbackLink onOpenFeedback={handleOpenFeedback} />
         </ScrollArea>
       </div>
     </div>
@@ -179,22 +205,21 @@ const ArrowIcon = () => (
   </svg>
 );
 
-function GoToFeedbackLink() {
+function GoToFeedbackLink({ onOpenFeedback }: { onOpenFeedback: () => void }) {
   return (
-    <div className="w-fit max-w-[95%] mb-5 mx-auto p-4 flex flex-col items-center border-2 border-ei-accent rounded-2xl">
+    <div className="w-fit max-w-[95%] mb-5 mx-auto p-4 flex flex-col items-center border-2 border-ei-accent rounded-2xl ">
       <h4 className="font-medium">Help us improve your experience.</h4>
       <p className="text-sm font-medium text-neutral-500 mb-3 text-center">
         Found a bug? Have a suggestion or Feature Request? Share your thoughts
         with us.
       </p>
-      <Link
-        href={"/"}
-        className="group bg-ei-accent text-white border-none py-[7px] px-[20px] rounded-full text-sm font-semibold cursor-pointer no-underline inline-flex items-center gap-2 transition-all duration-200 ease-linear shadow-[0_4px_20px_rgba(79,70,229,0.35)] hover:-translate-y-0.5"
+      <button
+        onClick={onOpenFeedback}
+        className="group bg-ei-accent text-white border-none py-[7px] px-[20px] rounded-full text-sm font-semibold cursor-pointer inline-flex items-center gap-2 transition-all duration-200 ease-linear shadow-[0_4px_20px_rgba(79,70,229,0.35)] hover:-translate-y-0.5"
       >
         Give Feedback
         <ArrowIcon />
-      </Link>
+      </button>
     </div>
   );
 }
-
