@@ -145,7 +145,7 @@ function MobileOverlay() {
           Best Viewed on Desktop
         </h1>
         <p className="text-center text-[15px] text-neutral-700">
-          Switch to{" "}
+          If you are using a mobile device, please switch to{" "}
           <span className="font-semibold text-neutral-800">Desktop Site</span>{" "}
           in your browser for the best experience.
         </p>
