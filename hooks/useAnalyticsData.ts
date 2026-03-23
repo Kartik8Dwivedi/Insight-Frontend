@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { QuestionData } from "@/types";
 import { normalizeQuestion } from "@/lib/analysis";
 
-const SESSION_KEY = "jee-analytics-v2"; // bump version to bust old cached shape
+const SESSION_KEY = "jee-analytics-v3"; // bump version to bust old cached shape
 
 export function useAnalyticsData() {
   const [allData, setAllData] = useState<QuestionData[]>([]);

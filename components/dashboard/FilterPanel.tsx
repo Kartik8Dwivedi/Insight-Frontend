@@ -13,7 +13,7 @@ import {
 import { FilterState } from "@/types";
 import { defaultFilters } from "@/lib/analysis";
 
-const YEAR_MIN = 2021;
+const YEAR_MIN = 2002;
 const YEAR_MAX = 2025;
 
 interface FilterPanelProps {
