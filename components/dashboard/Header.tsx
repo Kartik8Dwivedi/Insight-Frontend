@@ -22,7 +22,7 @@ export const Header = ({ onApplyFilters, currentFilters, onToggleMobileFilters }
         {/* Logo + title */}
         <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
           {onToggleMobileFilters && (
-            <Button variant="ghost" size="icon" className="lg:hidden shrink-0" onClick={onToggleMobileFilters}>
+            <Button variant="ghost" size="icon" className="md:hidden shrink-0" onClick={onToggleMobileFilters}>
               <Menu className="h-5 w-5" />
             </Button>
           )}

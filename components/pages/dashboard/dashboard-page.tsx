@@ -93,7 +93,7 @@ const DashboardPage = () => {
 
       {/* Mobile Filter Overlay */}
       {isMobileFiltersOpen && (
-        <div className="fixed inset-0 z-50 flex lg:hidden">
+        <div className="fixed inset-0 z-50 flex md:hidden">
           {/* Backdrop */}
           <div 
             className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
@@ -157,7 +157,7 @@ const DashboardPage = () => {
         ) : (
           <>
             {/* Desktop Filter Panel */}
-            <div className="hidden lg:block shrink-0">
+            <div className="hidden md:block shrink-0">
               <FilterPanel
                 chapters={chapters}
                 topics={topics}
@@ -172,11 +172,11 @@ const DashboardPage = () => {
                   stats={stats}
                   totalQuestions={totalOccurrences}
                 />
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <CategoryDistributionChart data={filteredData} stats={stats} />
                   <DifficultyHeatmap data={filteredData} stats={stats} />
                 </div>
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <ChapterWeightageChart data={filteredData} stats={stats} />
                   <YearTrendChart data={filteredData} stats={stats} />
                 </div>
