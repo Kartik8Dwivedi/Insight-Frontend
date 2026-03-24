@@ -15,8 +15,44 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ExamsOrbit | Exams made easy",
-  description: "ExamsOrbit is your ultimate companion for JEE Main preparation, offering strategic insights and data-driven analysis to help you ace the exam.",
+  title: "ExamsOrbit | JEE Main Pattern Analysis & Strategic Insights",
+  description: "Master JEE Main with data-driven insights. Analyze 20+ years of paper patterns, chapter weightage, and difficulty trends to prioritize your preparation effectively.",
+  keywords: ["JEE Main", "JEE Preparation", "ExamsOrbit", "JEE Analysis", "Chapter Weightage", "JEE Strategy", "JEE PYQ Analysis"],
+  authors: [{ name: "ExamsOrbit Team" }],
+  openGraph: {
+    title: "ExamsOrbit | Decode the JEE Main Pattern",
+    description: "Your ultimate data-driven companion for JEE preparation. Analysis of 15,000+ questions from 2002-2025.",
+    url: "https://examsorbit.com",
+    siteName: "ExamsOrbit",
+    images: [
+      {
+        url: "/logo.png",
+        width: 800,
+        height: 600,
+        alt: "ExamsOrbit Logo",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ExamsOrbit | JEE Main Strategic Insights",
+    description: "Master the JEE Main pattern with analysis of 20+ years of data.",
+    images: ["/logo.png"],
+  },
+  icons: {
+    icon: [
+      { url: "/favicon_io/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon_io/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: [
+      { url: "/favicon_io/apple-touch-icon.png" },
+    ],
+    other: [
+      { rel: "manifest", url: "/favicon_io/site.webmanifest" },
+    ],
+  },
 };
 
 export default function RootLayout({

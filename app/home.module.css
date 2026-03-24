@@ -82,6 +82,16 @@
   gap: 8px;
 }
 
+.navLogoImg {
+  width: 32px;
+  height: 32px;
+  object-contain: contain;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid var(--border);
+  padding: 2px;
+}
+
 .navLogoIcon {
   display: inline-flex;
   align-items: center;

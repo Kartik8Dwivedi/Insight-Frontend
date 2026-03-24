@@ -37,7 +37,8 @@ function Navbar() {
   return (
     <nav className={styles.nav}>
       <Link href="#" className={styles.navLogo}>
-        <span className={styles.navLogoIcon}>E</span> Examsorbit
+        <img src="/logo.png" alt="Examsorbit Logo" className={styles.navLogoImg} />
+        Examsorbit
       </Link>
       <Link target="blank" prefetch href="/dashboard" className={styles.navCta}>
         Open JEE Dashboard →

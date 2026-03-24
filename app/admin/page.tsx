@@ -68,16 +68,13 @@ function LoginScreen({ onLogin }: { onLogin: (token: string) => void }) {
         style={{ background: "#1a1d27", border: "1px solid #2a2d3a" }}
       >
         <div className="flex items-center gap-3 mb-8">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center"
-            style={{ background: "#4f46e5" }}
-          >
-            <BarChart2 className="w-5 h-5 text-white" />
+          <div className="w-12 h-12 rounded-2xl bg-white border border-[#2a2d3a] flex items-center justify-center p-1 overflow-hidden shadow-lg">
+            <img src="/logo.png" alt="ExamsOrbit" className="w-full h-full object-contain rounded-xl" />
           </div>
           <div>
-            <p className="font-bold text-white text-sm">Admin Panel</p>
+            <p className="font-bold text-white text-base">ExamsOrbit</p>
             <p className="text-xs" style={{ color: "#6b7280" }}>
-              JEE Dashboard Analytics
+              Admin Panel · Analytics
             </p>
           </div>
         </div>
@@ -409,16 +406,13 @@ function AdminDashboard({
         style={{ borderColor: "#2a2d3a", background: "#1a1d27" }}
       >
         <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-xl flex items-center justify-center"
-            style={{ background: "#4f46e5" }}
-          >
-            <BarChart2 className="w-4 h-4 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-white border border-[#2a2d3a] flex items-center justify-center p-0.5 shadow-sm">
+            <img src="/logo.png" alt="ExamsOrbit" className="w-full h-full object-contain rounded-lg" />
           </div>
           <div>
-            <p className="font-bold text-sm">Admin Panel</p>
+            <p className="font-bold text-sm">ExamsOrbit Admin</p>
             <p className="text-xs" style={{ color: "#6b7280" }}>
-              JEE Dashboard · Analytics & Feedback
+              Analytics & Feedback
             </p>
           </div>
         </div>

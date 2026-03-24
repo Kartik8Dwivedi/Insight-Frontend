@@ -1,9 +1,17 @@
-import { useMemo, useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from 'recharts';
-import { Lightbulb, ChevronRight } from 'lucide-react';
-import { QuestionData, ComputedStats } from '@/types';
-import { generateInsight } from '@/lib/analysis';
-import { Badge } from '@/components/ui/badge';
+import { useMemo, useState } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  Tooltip,
+  Cell,
+} from "recharts";
+import { Lightbulb, ChevronRight } from "lucide-react";
+import { QuestionData, ComputedStats } from "@/types";
+import { generateInsight } from "@/lib/analysis";
+import { Badge } from "@/components/ui/badge";
 
 interface ChapterWeightageChartProps {
   data: QuestionData[];
@@ -11,13 +19,16 @@ interface ChapterWeightageChartProps {
 }
 
 const DOMAIN_COLORS: Record<string, string> = {
-  Physics: 'hsl(220, 80%, 55%)',
-  Chemistry: 'hsl(150, 60%, 45%)',
-  Maths: 'hsl(280, 70%, 55%)',
-  Mathematics: 'hsl(280, 70%, 55%)',
+  Physics: "hsl(220, 80%, 55%)",
+  Chemistry: "hsl(150, 60%, 45%)",
+  Maths: "hsl(280, 70%, 55%)",
+  Mathematics: "hsl(280, 70%, 55%)",
 };
 
-export const ChapterWeightageChart = ({ data, stats }: ChapterWeightageChartProps) => {
+export const ChapterWeightageChart = ({
+  data,
+  stats,
+}: ChapterWeightageChartProps) => {
   const [selectedChapter, setSelectedChapter] = useState<string | null>(null);
 
   const chartData = useMemo(() => {
@@ -27,28 +38,37 @@ export const ChapterWeightageChart = ({ data, stats }: ChapterWeightageChartProp
       value: item.count,
       percentage: Math.round((item.count / total) * 100),
       domain: item._id.domain,
-      color: DOMAIN_COLORS[item._id.domain] || 'hsl(192, 75%, 50%)',
+      color: DOMAIN_COLORS[item._id.domain] || "hsl(192, 75%, 50%)",
     }));
   }, [stats]);
 
-  // Topic drill-down: filter from full data array for the selected chapter
+  // Topic drill-down: count history[] entries per topic, not topic records
   const topicData = useMemo(() => {
     if (!selectedChapter) return [];
-    const chapterSlice = data.filter((item) => item.chapter === selectedChapter);
-    const counts = chapterSlice.reduce((acc, item) => {
-      acc[item.topic] = (acc[item.topic] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const chapterSlice = data.filter(
+      (item) => item.chapter === selectedChapter,
+    );
+
+    // Sum history.length (real question appearances) per topic
+    const counts: Record<string, number> = {};
+    let chapterTotal = 0;
+    for (const item of chapterSlice) {
+      const n = item.history.length;
+      counts[item.topic] = (counts[item.topic] || 0) + n;
+      chapterTotal += n;
+    }
+
+    const total = chapterTotal || 1;
     return Object.entries(counts)
       .map(([name, value]) => ({
         name,
         value,
-        percentage: Math.round((value / chapterSlice.length) * 100),
+        percentage: Math.round((value / total) * 100),
       }))
       .sort((a, b) => b.value - a.value);
   }, [data, selectedChapter]);
 
-  const insight = useMemo(() => generateInsight(data, 'chapter'), [data]);
+  const insight = useMemo(() => generateInsight(data, "chapter"), [data]);
 
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -57,7 +77,7 @@ export const ChapterWeightageChart = ({ data, stats }: ChapterWeightageChartProp
         <div className="bg-popover border border-border rounded-lg p-3 shadow-lg">
           <p className="font-medium">{d.name}</p>
           <p className="text-sm text-muted-foreground">
-            {d.value} questions ({d.percentage}%)
+            {d.value} questions (~{d.percentage}%)
           </p>
           {d.domain && (
             <Badge variant="secondary" className="mt-1 text-xs">
@@ -85,13 +105,13 @@ export const ChapterWeightageChart = ({ data, stats }: ChapterWeightageChartProp
                 ← Topic Breakdown: {selectedChapter}
               </button>
             ) : (
-              'Chapter-wise Weightage'
+              "Chapter-wise Weightage"
             )}
           </h3>
           <p className="text-xs text-muted-foreground mt-0.5">
             {selectedChapter
-              ? 'Distribution across topics (click to go back)'
-              : 'Click a bar to see topic breakdown'}
+              ? "Distribution across topics (click to go back)"
+              : "Click a bar to see topic breakdown"}
           </p>
         </div>
         <span className="text-xs font-mono text-muted-foreground">
@@ -119,7 +139,7 @@ export const ChapterWeightageChart = ({ data, stats }: ChapterWeightageChartProp
             <Bar
               dataKey="value"
               radius={[0, 4, 4, 0]}
-              cursor={selectedChapter ? 'default' : 'pointer'}
+              cursor={selectedChapter ? "default" : "pointer"}
               onClick={(entry) => {
                 if (!selectedChapter) setSelectedChapter(entry.name);
               }}
@@ -129,8 +149,8 @@ export const ChapterWeightageChart = ({ data, stats }: ChapterWeightageChartProp
                   key={`cell-${index}`}
                   fill={
                     selectedChapter
-                      ? 'hsl(192, 75%, 50%)'
-                      : (entry as any).color || 'hsl(192, 75%, 50%)'
+                      ? "hsl(192, 75%, 50%)"
+                      : (entry as any).color || "hsl(192, 75%, 50%)"
                   }
                 />
               ))}
@@ -158,7 +178,9 @@ export const ChapterWeightageChart = ({ data, stats }: ChapterWeightageChartProp
       <div className="mt-4 p-3 bg-accent/50 rounded-lg border border-accent">
         <div className="flex gap-2">
           <Lightbulb className="h-4 w-4 text-accent-foreground mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-accent-foreground leading-relaxed">{insight}</p>
+          <p className="text-sm text-accent-foreground leading-relaxed">
+            {insight}
+          </p>
         </div>
       </div>
     </div>

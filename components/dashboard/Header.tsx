@@ -26,14 +26,14 @@ export const Header = ({ onApplyFilters, currentFilters, onToggleMobileFilters }
               <Menu className="h-5 w-5" />
             </Button>
           )}
-          <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg shrink-0">
-            <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+          <div className="p-1 md:p-1.5 bg-background border border-border rounded-xl shrink-0 overflow-hidden shadow-sm">
+            <img src="/logo.png" alt="ExamsOrbit" className="h-7 w-7 md:h-8 md:w-8 object-contain rounded-lg" />
           </div>
           <div className="hidden sm:block">
             <h1 className="text-lg md:text-xl font-bold tracking-tight line-clamp-1">
-              JEE Exam Intelligence Dashboard
+              ExamsOrbit Intelligence Dashboard
             </h1>
-            <p className="text-xs md:text-sm text-muted-foreground line-clamp-1">
+            <p className="text-xs md:text-sm text-muted-foreground line-clamp-1 font-medium">
               Decoding How JEE Asks Questions
             </p>
           </div>
