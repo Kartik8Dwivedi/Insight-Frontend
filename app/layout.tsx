@@ -64,6 +64,9 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head>
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
+        <link rel="preconnect" href="https://www.clarity.ms" />
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-1E7Z7JPVT4"
@@ -88,6 +91,10 @@ export default function RootLayout({
             })(window, document, "clarity", "script", "w0vjnnuty6");
           `}
         </Script>
+
+        {/* <!-- Cloudflare Web Analytics --> */}
+        <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "900ba37882e141b4a66000505e4574be"}'></script>
+        {/* <!-- End Cloudflare Web Analytics --> */}
       </head>
       <body
         className={`${inter.variable} ${geistMono.variable} font-sans antialiased`}
