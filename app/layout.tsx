@@ -64,6 +64,21 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <head>
+        {/* Google Analytics */}
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-1E7Z7JPVT4"
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-1E7Z7JPVT4');
+          `}
+        </Script>
+
+        {/* Microsoft Clarity */}
         <Script id="microsoft-clarity" strategy="afterInteractive">
           {`
             (function(c,l,a,r,i,t,y){
