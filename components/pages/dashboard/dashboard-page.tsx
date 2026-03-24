@@ -24,6 +24,7 @@ const DashboardPage = () => {
   const { allData, loading, error } = useAnalyticsData();
   const [filters, setFilters] = useState<FilterState>(defaultFilters);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   const { trackFilterUsed, trackAISearch, trackFeedbackOpened } =
     useTracker("dashboard");
@@ -78,83 +79,130 @@ const DashboardPage = () => {
     setFeedbackOpen(true);
   }, [trackFeedbackOpened]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex justify-center items-center gap-2">
-        <Loader className="animate-spin" size={20} />
-        <p className="text-muted-foreground font-semibold">Loading data…</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-background flex justify-center items-center">
-        <div className="text-center p-8">
-          <AlertCircle className="mx-auto mb-4 text-destructive" size={40} />
-          <p className="font-semibold text-destructive">
-            Failed to load analytics data
-          </p>
-          <p className="text-sm text-muted-foreground mt-2">{error}</p>
-          <Button className="mt-4" onClick={() => window.location.reload()}>
-            Retry
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="h-screen bg-background overflow-y-hidden flex flex-col">
-      <Header onApplyFilters={handleAIFilters} currentFilters={filters} />
-      <MobileOverlay />
+    <div className="h-screen bg-background overflow-y-hidden flex flex-col relative w-full">
+      <Header 
+        onApplyFilters={handleAIFilters} 
+        currentFilters={filters} 
+        onToggleMobileFilters={() => setIsMobileFiltersOpen(true)}
+      />
       <FeedbackModal
         open={feedbackOpen}
         onClose={() => setFeedbackOpen(false)}
       />
 
-      <div className="flex flex-1 overflow-hidden">
-        <FilterPanel
-          chapters={chapters}
-          topics={topics}
-          filters={filters}
-          onFilterChange={handleFilterChange}
-        />
-        <ScrollArea className="h-[calc(100vh-80px)] flex-1">
-          <main className="p-6 space-y-6">
-            <SummaryPanel
-              data={filteredData}
-              stats={stats}
-              totalQuestions={totalOccurrences}
-            />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <CategoryDistributionChart data={filteredData} stats={stats} />
-              <DifficultyHeatmap data={filteredData} stats={stats} />
+      {/* Mobile Filter Overlay */}
+      {isMobileFiltersOpen && (
+        <div className="fixed inset-0 z-50 flex lg:hidden">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+            onClick={() => setIsMobileFiltersOpen(false)} 
+          />
+          {/* Panel */}
+          <div className="relative w-[300px] max-w-[85vw] bg-background h-full shadow-2xl flex flex-col animate-in slide-in-from-left duration-300">
+            <div className="flex items-center justify-between p-4 border-b">
+              <span className="font-semibold tracking-tight">Filters</span>
+              <Button variant="ghost" size="icon" onClick={() => setIsMobileFiltersOpen(false)} className="h-8 w-8 rounded-full">
+                <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.7816 4.03157C12.0062 3.80702 12.0062 3.44295 11.7816 3.2184C11.5571 2.99385 11.193 2.99385 10.9685 3.2184L7.50005 6.68682L4.03164 3.2184C3.80708 2.99385 3.44301 2.99385 3.21846 3.2184C2.99391 3.44295 2.99391 3.80702 3.21846 4.03157L6.68688 7.49999L3.21846 10.9684C2.99391 11.193 2.99391 11.557 3.21846 11.7816C3.44301 12.0061 3.80708 12.0061 4.03164 11.7816L7.50005 8.31316L10.9685 11.7816C11.193 12.0061 11.5571 12.0061 11.7816 11.7816C12.0062 11.557 12.0062 11.193 11.7816 10.9684L8.31322 7.49999L11.7816 4.03157Z" fill="currentColor" fillRule="evenodd" clipRule="evenodd"></path>
+                </svg>
+              </Button>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ChapterWeightageChart data={filteredData} stats={stats} />
-              <YearTrendChart data={filteredData} stats={stats} />
+            <div className="flex-1 overflow-hidden">
+              <FilterPanel
+                chapters={chapters}
+                topics={topics}
+                filters={filters}
+                onFilterChange={handleFilterChange}
+                className="w-full h-full border-r-0"
+              />
             </div>
-            <div className="text-center py-4 border-t border-border">
-              <p className="text-sm text-muted-foreground">
-                Data based on JEE Main pattern analysis (2002–2025) •{" "}
-                <span className="font-mono">
-                  {stats.totalQuestions.toLocaleString()}
-                </span>{" "}
-                of{" "}
-                <span className="font-mono">
-                  {totalOccurrences.toLocaleString()}
-                </span>{" "}
-                questions selected
+          </div>
+        </div>
+      )}
+
+      <div className="flex flex-1 overflow-hidden w-full">
+        {loading ? (
+          <div className="flex-1 flex flex-col justify-center items-center gap-4 bg-muted/5 animate-in fade-in duration-500">
+            <div className="relative">
+              <div className="absolute inset-0 rounded-full bg-primary/20 blur-xl animate-pulse" />
+              <Loader className="animate-spin text-primary relative z-10" size={32} />
+            </div>
+            <div className="text-center space-y-1">
+              <p className="text-foreground font-bold tracking-tight">Gathering exam insights...</p>
+              <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Processing 15,000+ data points</p>
+            </div>
+          </div>
+        ) : error ? (
+          <div className="flex-1 flex justify-center items-center bg-muted/5 p-6 animate-in fade-in">
+            <div className="text-center p-8 max-w-md bg-card border border-destructive/20 rounded-2xl shadow-xl shadow-destructive/5">
+              <div className="w-16 h-16 rounded-full bg-destructive/10 flex items-center justify-center mx-auto mb-6">
+                <AlertCircle className="text-destructive" size={32} />
+              </div>
+              <h2 className="font-bold text-lg text-foreground mb-2">Connection Error</h2>
+              <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
+                We couldn't load the analytics data. This might be due to a temporary network issue.
+                <br /><span className="text-xs italic mt-2 block opacity-70">({error})</span>
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                This dashboard provides strategic insights only. No actual
-                questions or solutions are displayed.
-              </p>
+              <Button 
+                variant="default"
+                className="w-full h-11 rounded-xl font-bold transition-all hover:translate-y-[-2px] active:translate-y-[1px]" 
+                onClick={() => window.location.reload()}
+              >
+                Try Again
+              </Button>
             </div>
-          </main>
-          <GoToFeedbackLink onOpenFeedback={handleOpenFeedback} />
-        </ScrollArea>
+          </div>
+        ) : (
+          <>
+            {/* Desktop Filter Panel */}
+            <div className="hidden lg:block shrink-0">
+              <FilterPanel
+                chapters={chapters}
+                topics={topics}
+                filters={filters}
+                onFilterChange={handleFilterChange}
+              />
+            </div>
+            <ScrollArea className="h-[calc(100vh-80px)] flex-1 min-w-0">
+              <main className="p-6 space-y-6">
+                <SummaryPanel
+                  data={filteredData}
+                  stats={stats}
+                  totalQuestions={totalOccurrences}
+                />
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <CategoryDistributionChart data={filteredData} stats={stats} />
+                  <DifficultyHeatmap data={filteredData} stats={stats} />
+                </div>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <ChapterWeightageChart data={filteredData} stats={stats} />
+                  <YearTrendChart data={filteredData} stats={stats} />
+                </div>
+                <div className="text-center py-8 border-t border-border/50">
+                  <p className="text-sm text-muted-foreground font-medium">
+                    Data based on JEE Main pattern analysis (2002–2025) •{" "}
+                    <span className="font-mono text-foreground font-bold">
+                      {stats.totalQuestions.toLocaleString()}
+                    </span>{" "}
+                    of{" "}
+                    <span className="font-mono text-foreground font-bold">
+                      {totalOccurrences.toLocaleString()}
+                    </span>{" "}
+                    questions selected
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-2 max-w-lg mx-auto leading-relaxed">
+                    This dashboard provides strategic insights only. It is designed to help you 
+                    prioritize your preparation based on historical data. No actual questions 
+                    or solutions are displayed.
+                  </p>
+                </div>
+              </main>
+              <GoToFeedbackLink onOpenFeedback={handleOpenFeedback} />
+            </ScrollArea>
+          </>
+        )}
       </div>
     </div>
   );
@@ -162,34 +210,7 @@ const DashboardPage = () => {
 
 export default DashboardPage;
 
-function MobileOverlay() {
-  const isMobile = useIsMobile();
-  const [dismissed, setDismissed] = useState(false);
-  if (!isMobile || dismissed) return null;
-  return (
-    <section className="fixed inset-0 bg-black/30 z-50 flex justify-center items-center">
-      <div className="bg-white p-8 rounded-2xl shadow-lg w-[350px] flex flex-col gap-3 items-center">
-        <h1 className="text-xl font-semibold tracking-tight">
-          Best Viewed on Desktop
-        </h1>
-        <p className="text-center text-[15px] text-neutral-700">
-          Switch to{" "}
-          <span className="font-semibold text-neutral-800">Desktop Site</span>{" "}
-          in your browser for the best experience.
-        </p>
-        <p className="text-sm text-neutral-600 my-4">
-          Mobile responsiveness is coming soon!
-        </p>
-        <Button
-          className="w-full bg-ei-accent rounded-full text-white hover:bg-ei-accent-mid hover:-translate-y-[2px] transition-all duration-200"
-          onClick={() => setDismissed(true)}
-        >
-          Continue Anyway
-        </Button>
-      </div>
-    </section>
-  );
-}
+
 
 const ArrowIcon = () => (
   <svg

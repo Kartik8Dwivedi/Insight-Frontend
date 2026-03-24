@@ -219,7 +219,7 @@ function FeaturesSection() {
       <p className={styles.sectionSub}>
         Data replaces guesswork. Clarity replaces anxiety.
       </p>
-      <div className="grid grid-cols-2 gap-2 mt-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 md:mt-10">
         {featuresData.map((feature) => (
           <div key={feature.title} className={styles.featureCard}>
             <div className={styles.featureIcon}>{feature.icon}</div>

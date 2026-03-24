@@ -1,5 +1,6 @@
-import { BarChart3, Info } from "lucide-react";
+import { BarChart3, Info, Menu } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -11,22 +12,28 @@ import { FilterState } from "@/types";
 interface HeaderProps {
   onApplyFilters: (filters: FilterState) => void;
   currentFilters: FilterState;
+  onToggleMobileFilters?: () => void;
 }
 
-export const Header = ({ onApplyFilters, currentFilters }: HeaderProps) => {
+export const Header = ({ onApplyFilters, currentFilters, onToggleMobileFilters }: HeaderProps) => {
   return (
-    <header className="bg-card border-b border-border px-6 py-4">
-      <div className="flex items-center justify-between gap-4">
+    <header className="bg-card border-b border-border px-4 md:px-6 py-3 md:py-4 shrink-0">
+      <div className="flex items-center justify-between gap-2 md:gap-4">
         {/* Logo + title */}
-        <div className="flex items-center gap-3 flex-shrink-0">
-          <div className="p-2 bg-primary/10 rounded-lg">
-            <BarChart3 className="h-6 w-6 text-primary" />
+        <div className="flex items-center gap-2 md:gap-3 flex-shrink-0">
+          {onToggleMobileFilters && (
+            <Button variant="ghost" size="icon" className="lg:hidden shrink-0" onClick={onToggleMobileFilters}>
+              <Menu className="h-5 w-5" />
+            </Button>
+          )}
+          <div className="p-1.5 md:p-2 bg-primary/10 rounded-lg shrink-0">
+            <BarChart3 className="h-5 w-5 md:h-6 md:w-6 text-primary" />
           </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight">
+          <div className="hidden sm:block">
+            <h1 className="text-lg md:text-xl font-bold tracking-tight line-clamp-1">
               JEE Exam Intelligence Dashboard
             </h1>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-xs md:text-sm text-muted-foreground line-clamp-1">
               Decoding How JEE Asks Questions
             </p>
           </div>

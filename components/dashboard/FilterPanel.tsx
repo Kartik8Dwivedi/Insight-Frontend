@@ -21,6 +21,7 @@ interface FilterPanelProps {
   topics: Record<string, string[]>;
   filters: FilterState;
   onFilterChange: (filters: FilterState) => void;
+  className?: string;
 }
 
 const FilterSection = ({
@@ -52,8 +53,8 @@ const FilterSection = ({
       onOpenChange={setIsOpen}
       className="filter-section"
     >
-      <CollapsibleTrigger className="flex items-center justify-between w-full py-2 hover:bg-muted/50 rounded px-2 -mx-2">
-        <span className="filter-label">{title}</span>
+      <CollapsibleTrigger className="flex items-center justify-between w-full py-2 hover:bg-muted/50 rounded px-2 -mx-2 transition-colors">
+        <span className="filter-label text-sm font-medium">{title}</span>
         {isOpen ? (
           <ChevronUp className="h-4 w-4 text-muted-foreground" />
         ) : (
@@ -64,17 +65,17 @@ const FilterSection = ({
         {items.map((item) => (
           <label
             key={item}
-            className="flex items-center gap-2.5 py-1.5 px-2 rounded-md hover:bg-muted/50 cursor-pointer transition-colors"
+            className="flex items-center gap-2.5 py-1.5 px-2 -mx-2 rounded-md hover:bg-muted/50 cursor-pointer transition-colors"
           >
             <Checkbox
               checked={selected.includes(item)}
               onCheckedChange={() => handleToggle(item)}
-              className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+              className="data-[state=checked]:bg-primary data-[state=checked]:border-primary rounded-[4px]"
             />
-            <span className="text-sm">{item}</span>
+            <span className="text-sm font-medium leading-none">{item}</span>
             {colorMap && (
               <span
-                className="w-2 h-2 rounded-full ml-auto"
+                className="w-2.5 h-2.5 rounded-full ml-auto shadow-sm"
                 style={{ backgroundColor: colorMap[item] }}
               />
             )}
@@ -90,6 +91,7 @@ export const FilterPanel = ({
   topics,
   filters,
   onFilterChange,
+  className,
 }: FilterPanelProps) => {
   const domainColors: Record<string, string> = {
     Physics: "hsl(220, 80%, 55%)",
@@ -141,7 +143,7 @@ export const FilterPanel = ({
   const clearAllFilters = () => onFilterChange(defaultFilters);
 
   return (
-    <div className="w-72 sticky top-0 bg-card border-r border-border flex flex-col h-[calc(100vh-80px)] overflow-y-scroll">
+    <div className={`w-72 sticky top-0 bg-card border-r border-border flex flex-col h-[calc(100vh-80px)] overflow-y-scroll ${className || ""}`}>
       <div className="p-4 border-b border-border">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
