@@ -45,6 +45,7 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://examsorbit.com",
   },
+  manifest: "/manifest.json",
   icons: {
     icon: [
       { url: "/favicon_io/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -66,6 +67,7 @@ export default function RootLayout({
 }>) {
   const jsonLd = {
     "@context": "https://schema.org",
+    "@id": "examsorbit-web-app",
     "@type": "WebApplication",
     "name": "ExamsOrbit",
     "url": "https://examsorbit.com",
@@ -83,6 +85,31 @@ export default function RootLayout({
     }
   };
 
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://examsorbit.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Dashboard",
+        "item": "https://examsorbit.com/dashboard"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "JEE AI Search",
+        "item": "https://examsorbit.com/chat"
+      }
+    ]
+  };
+
   return (
     <html suppressHydrationWarning lang="en">
       <head>
@@ -92,6 +119,10 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
         />
         {/* Google Analytics */}
         <Script
