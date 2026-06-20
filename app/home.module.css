@@ -980,6 +980,10 @@
     display: flex;
   }
   
+  .hideOnMobile {
+    display: none !important;
+  }
+  
   .nav {
     padding: 0 16px;
   }

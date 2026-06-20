@@ -41,7 +41,7 @@ function Navbar() {
         Examsorbit
       </Link>
       <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-        <Link prefetch href="/chat" className={styles.btnSecondary} style={{ padding: "8px 16px", fontSize: "12px", fontWeight: "600", borderColor: "var(--accent)", color: "var(--accent)" }}>
+        <Link prefetch href="/chat" className={`${styles.btnSecondary} ${styles.hideOnMobile}`} style={{ padding: "8px 16px", fontSize: "12px", fontWeight: "600", borderColor: "var(--accent)", color: "var(--accent)" }}>
           Try AI Tutor
         </Link>
         <Link target="blank" prefetch href="/dashboard" className={styles.navCta}>
