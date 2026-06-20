@@ -42,6 +42,10 @@ export const metadata: Metadata = {
     description: "Master the JEE Main pattern with analysis of 20+ years of data.",
     images: ["/logo.png"],
   },
+  alternates: {
+    canonical: "https://examsorbit.com",
+  },
+  manifest: "/manifest.json",
   icons: {
     icon: [
       { url: "/favicon_io/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -61,12 +65,65 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@id": "examsorbit-web-app",
+    "@type": "WebApplication",
+    "name": "ExamsOrbit",
+    "url": "https://examsorbit.com",
+    "description": "Strategic JEE Main pattern analysis tool with 20+ years of data insights.",
+    "applicationCategory": "EducationalApplication",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "INR"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "ExamsOrbit"
+    }
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://examsorbit.com"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Dashboard",
+        "item": "https://examsorbit.com/dashboard"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "JEE AI Search",
+        "item": "https://examsorbit.com/chat"
+      }
+    ]
+  };
+
   return (
     <html suppressHydrationWarning lang="en">
       <head>
         <link rel="preconnect" href="https://www.googletagmanager.com" />
         <link rel="preconnect" href="https://www.google-analytics.com" />
         <link rel="preconnect" href="https://www.clarity.ms" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
+        />
         {/* Google Analytics */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-1E7Z7JPVT4"

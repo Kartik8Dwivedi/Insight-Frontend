@@ -316,13 +316,53 @@ function AdminDashboard({
     const sessions = events.filter((e) => e.type === "session_end");
     const filterEvents = events.filter((e) => e.type === "filter_used");
     const aiSearches = events.filter((e) => e.type === "ai_search");
+    const clicks = events.filter((e) => e.type === "click");
 
-    const uniqueSessions = new Set(pageviews.map((e) => e.sessionId)).size;
+    const sessionIds = Array.from(new Set(events.map((e) => e.sessionId)));
+    const uniqueSessions = sessionIds.length;
+    
+    // Average duration (marketing likes this)
     const avgDuration = sessions.length
       ? Math.round(
           sessions.reduce((s, e) => s + (e.duration ?? 0), 0) / sessions.length,
         )
       : 0;
+
+    // Bounce Rate: % of sessions with only 1 event (usually just a pageview)
+    const sessionEventCount: Record<string, number> = {};
+    for (const e of events) {
+      sessionEventCount[e.sessionId] = (sessionEventCount[e.sessionId] ?? 0) + 1;
+    }
+    const bounces = Object.values(sessionEventCount).filter(count => count === 1).length;
+    const bounceRate = uniqueSessions ? ((bounces / uniqueSessions) * 100).toFixed(1) : "0.0";
+
+    // Top Pages
+    const pageMap: Record<string, number> = {};
+    for (const e of pageviews) {
+      const p = e.page || "/";
+      pageMap[p] = (pageMap[p] ?? 0) + 1;
+    }
+    const topPages = Object.entries(pageMap)
+      .map(([name, views]) => ({ name, views }))
+      .sort((a, b) => b.views - a.views)
+      .slice(0, 5);
+
+    // Referrers (Marketing attribution)
+    const referrerMap: Record<string, number> = {};
+    for (const e of pageviews) {
+      if (!e.referrer) continue;
+      try {
+        const url = new URL(e.referrer);
+        const host = url.hostname;
+        referrerMap[host] = (referrerMap[host] ?? 0) + 1;
+      } catch {
+        referrerMap["other"] = (referrerMap["other"] ?? 0) + 1;
+      }
+    }
+    const topReferrers = Object.entries(referrerMap)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
 
     // Daily pageviews for chart
     const dailyMap: Record<string, number> = {};
@@ -335,7 +375,11 @@ function AdminDashboard({
     }
     const dailyViews = Object.entries(dailyMap)
       .map(([date, views]) => ({ date, views }))
-      .slice(-14); // last 14 days
+      .sort((a, b) => {
+        // Simple string sort isn't great for dates, but it works for short ranges
+        return new Date(a.date).getTime() - new Date(b.date).getTime();
+      })
+      .slice(-14);
 
     // Filter usage breakdown
     const filterMap: Record<string, number> = {};
@@ -349,8 +393,7 @@ function AdminDashboard({
 
     // AI search queries
     const recentSearches = aiSearches
-      .slice(-20)
-      .reverse()
+      .slice(0, 20)
       .map((e) => e.meta?.query ?? "");
 
     // Mobile vs desktop
@@ -363,8 +406,12 @@ function AdminDashboard({
     return {
       uniqueSessions,
       avgDuration,
+      bounceRate,
+      topPages,
+      topReferrers,
       filterEvents,
       aiSearches,
+      clicks,
       dailyViews,
       filterBreakdown,
       recentSearches,

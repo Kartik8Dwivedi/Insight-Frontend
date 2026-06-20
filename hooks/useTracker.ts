@@ -19,6 +19,9 @@ async function sendEvent(
   duration?: number,
 ) {
   try {
+    const page = typeof window !== "undefined" ? window.location.pathname : "";
+    const referrer = typeof document !== "undefined" ? document.referrer : "";
+
     await fetch("/api/track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -26,6 +29,8 @@ async function sendEvent(
         type,
         sessionId: getSessionId(),
         isMobile: isMobileDevice(),
+        page,
+        referrer,
         meta,
         duration: duration ?? null,
       }),
@@ -48,11 +53,11 @@ export function useTracker(pageName: string) {
   useEffect(() => {
     if (tracked.current) return;
     tracked.current = true;
-    sendEvent("pageview", { page: pageName });
+    sendEvent("pageview", { pageName });
 
     const handleUnload = () => {
       const duration = Math.round((Date.now() - startTime.current) / 1000);
-      sendEvent("session_end", { page: pageName }, duration);
+      sendEvent("session_end", { pageName }, duration);
     };
 
     window.addEventListener("beforeunload", handleUnload);
@@ -60,7 +65,7 @@ export function useTracker(pageName: string) {
     const handleVisibility = () => {
       if (document.visibilityState === "hidden") {
         const duration = Math.round((Date.now() - startTime.current) / 1000);
-        sendEvent("session_end", { page: pageName }, duration);
+        sendEvent("session_end", { pageName }, duration);
       }
     };
     document.addEventListener("visibilitychange", handleVisibility);
@@ -84,5 +89,9 @@ export function useTracker(pageName: string) {
     sendEvent("feedback_opened", {});
   }, []);
 
-  return { trackFilterUsed, trackAISearch, trackFeedbackOpened };
+  const trackClick = useCallback((elementName: string, meta: Record<string, any> = {}) => {
+    sendEvent("click", { element: elementName, ...meta });
+  }, []);
+
+  return { trackFilterUsed, trackAISearch, trackFeedbackOpened, trackClick };
 }

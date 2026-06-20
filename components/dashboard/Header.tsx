@@ -1,4 +1,4 @@
-import { BarChart3, Info, Menu, Bot } from "lucide-react";
+import { BarChart3, Info, Menu, Bot, BookOpen } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -44,6 +44,11 @@ export const Header = ({ onApplyFilters, currentFilters, onToggleMobileFilters }
 
         {/* Right side: AI search + badges */}
         <div className="flex items-center gap-3">
+          <Link href="/blog" className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium hover:bg-muted transition-colors text-muted-foreground hover:text-foreground">
+            <BookOpen className="h-4 w-4" />
+            Intelligence Blog
+          </Link>
+
           <AISearchBar
             onApplyFilters={onApplyFilters}
             currentFilters={currentFilters}
