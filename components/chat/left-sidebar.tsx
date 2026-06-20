@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, MessageCircleMore, Plus, SidebarClose, SidebarOpen } from "lucide-react";
+import { LogOut, MessageCircleMore, Plus, SidebarClose, SidebarOpen, Home, LayoutDashboard } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect } from "react";
@@ -37,6 +37,14 @@ export const LeftSidebar = () => {
         )}
       >
         <div className="p-4 h-[calc(100%-80px)] overflow-y-scroll">
+          <div className="flex gap-2 mb-6 mt-6">
+            <Link prefetch href="/" className="flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xs font-medium transition-colors">
+              <Home size={14} /> Home
+            </Link>
+            <Link prefetch href="/dashboard" className="flex-1 flex items-center justify-center gap-1.5 p-2 rounded-lg bg-muted text-muted-foreground hover:bg-muted/80 text-xs font-medium transition-colors">
+              <LayoutDashboard size={14} /> Dashboard
+            </Link>
+          </div>
           <NewChat />
           <RecentChats />
         </div>
@@ -72,10 +80,10 @@ const UserProfile = () => {
       </figure>
       <div className="flex flex-col justify-center w-[150px]">
         <p className="text-nowrap text-ellipsis overflow-hidden">
-          Rupam Bhattacharya
+          Plans coming up soon
         </p>
-        <p className="text-ei-ink-muted text-nowrap text-ellipsis overflow-hidden">
-          rupambhattacharya1@gmail.com
+        <p className="text-ei-ink-muted text-nowrap text-ellipsis overflow-hidden text-xs">
+          In the next version
         </p>
       </div>
 
@@ -94,30 +102,16 @@ const UserProfile = () => {
 const RecentChats = () => {
   const params = useParams();
   const chatId = params.chatId;
-  const chats: MockChatResponse[] = [{
-    id: "sdjsodhishd",
-    status: "success",
-    llmResponse: "shdoshdos",
-    userPrompt: "sdjsodhshd"
-  },
-  {
-    id: "sdjsodhishd1232",
-    status: "success",
-    llmResponse: "shdoshdos",
-    userPrompt: "sdjsodhshd"
-  },
-  {
-    id: "sdjsodhishd232",
-    status: "success",
-    llmResponse: "shdoshdos",
-    userPrompt: "sdjsodhshd"
-  },
-  {
-    id: "sdjsodhishd3232",
-    status: "success",
-    llmResponse: "shdoshdos",
-    userPrompt: "sdjsodhshd"
-  }];
+  const [chats, setChats] = React.useState<any[]>([]);
+
+  useEffect(() => {
+    try {
+      const storedChats = JSON.parse(localStorage.getItem('jee_recent_chats') || '[]');
+      setChats(storedChats);
+    } catch (e) {
+      console.error(e);
+    }
+  }, [chatId]);
   return (
     <>
       <h3 className="font-semibold text-nowrap overflow-hidden text-ellipsis leading-[110%]">

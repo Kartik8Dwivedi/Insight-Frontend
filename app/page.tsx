@@ -40,9 +40,14 @@ function Navbar() {
         <img src="/logo.png" alt="Examsorbit Logo" className={styles.navLogoImg} />
         Examsorbit
       </Link>
-      <Link target="blank" prefetch href="/dashboard" className={styles.navCta}>
-        Open JEE Dashboard →
-      </Link>
+      <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        <Link prefetch href="/chat" className={styles.btnSecondary} style={{ padding: "8px 16px", fontSize: "12px", fontWeight: "600", borderColor: "var(--accent)", color: "var(--accent)" }}>
+          Try AI Tutor
+        </Link>
+        <Link target="blank" prefetch href="/dashboard" className={styles.navCta}>
+          Open JEE Dashboard →
+        </Link>
+      </div>
     </nav>
   );
 }
@@ -64,6 +69,10 @@ function HeroSection() {
       <div className={styles.heroActions}>
         <Link target="blank" prefetch href="/dashboard" className={styles.btnPrimary}>
           Explore JEE Dashboard
+          <ArrowIcon />
+        </Link>
+        <Link prefetch href="/chat" className={styles.btnPrimary} style={{ background: "var(--white)", color: "var(--accent)", border: "1.5px solid var(--accent)", boxShadow: "none" }}>
+          Try AI Tutor Chat
           <ArrowIcon />
         </Link>
         <Link href="#how-it-works" className={styles.btnSecondary}>
@@ -453,6 +462,29 @@ function FloatingBar() {
   );
 }
 
+/* ─── AI Chat Section ─── */
+
+function AIChatSection() {
+  return (
+    <section
+      className={`${styles.section} ${styles.sectionCenter}`}
+      style={{ paddingTop: 0 }}
+    >
+      <div className={styles.sectionTag} style={{ background: "var(--accent)", color: "white" }}>New Feature</div>
+      <h2 className={styles.sectionTitle}>Meet Your Personal AI Tutor</h2>
+      <p className={styles.sectionSub}>
+        Got a doubt? Communicate directly with our new advanced AI assistant. Powered by the latest LLMs (just like Gemini and ChatGPT), it breaks down complex Physics, Chemistry, and Math problems into simple, step-by-step explanations.
+      </p>
+      <div style={{ marginTop: "2rem", display: "flex", justifyContent: "center" }}>
+        <Link prefetch href="/chat" className={styles.btnPrimary}>
+          Try AI Chat Now
+          <ArrowIcon />
+        </Link>
+      </div>
+    </section>
+  );
+}
+
 /* ─── Page Component ─── */
 
 export default function HomePage() {
@@ -469,6 +501,7 @@ export default function HomePage() {
         <DashboardPreview />
         <StatsRow />
         <FeaturesSection />
+        <AIChatSection />
         <ExamDashboards />
         <WhySection />
         <ComingSoonSection />

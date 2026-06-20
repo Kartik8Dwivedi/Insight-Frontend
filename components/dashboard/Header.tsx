@@ -1,6 +1,7 @@
-import { BarChart3, Info, Menu } from "lucide-react";
+import { BarChart3, Info, Menu, Bot } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import {
   Tooltip,
   TooltipContent,
@@ -27,7 +28,9 @@ export const Header = ({ onApplyFilters, currentFilters, onToggleMobileFilters }
             </Button>
           )}
           <div className="p-1 md:p-1.5 bg-background border border-border rounded-xl shrink-0 overflow-hidden shadow-sm">
-            <img src="/logo.png" alt="ExamsOrbit" className="h-7 w-7 md:h-8 md:w-8 object-contain rounded-lg" />
+            <Link href="/">
+              <img src="/logo.png" alt="ExamsOrbit" className="h-7 w-7 md:h-8 md:w-8 object-contain rounded-lg" />
+            </Link>
           </div>
           <div className="hidden sm:block">
             <h1 className="text-lg md:text-xl font-bold tracking-tight line-clamp-1">
@@ -45,6 +48,16 @@ export const Header = ({ onApplyFilters, currentFilters, onToggleMobileFilters }
             onApplyFilters={onApplyFilters}
             currentFilters={currentFilters}
           />
+
+          <Link href="/chat">
+            <Button variant="default" size="sm" className="hidden sm:flex items-center gap-2 bg-ei-accent hover:bg-ei-accent/90">
+              <Bot size={16} />
+              AI Tutor
+            </Button>
+            <Button variant="default" size="icon" className="sm:hidden bg-ei-accent hover:bg-ei-accent/90">
+              <Bot size={16} />
+            </Button>
+          </Link>
 
           <Tooltip>
             <TooltipTrigger asChild>

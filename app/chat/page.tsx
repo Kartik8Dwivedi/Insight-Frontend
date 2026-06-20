@@ -41,9 +41,11 @@ const NewChatPage = () => {
 	}, []);
 
 	const handleNewChat = async () => {
+		if (!prompt.trim()) return;
 		try {
 			setIsLoading(true);
-
+			const chatId = Math.random().toString(36).substring(7);
+			router.push(`/chat/${chatId}?prompt=${encodeURIComponent(prompt)}`);
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -53,7 +55,7 @@ const NewChatPage = () => {
 	return (
 		<div className="w-full h-screen flex flex-col items-center bg-[#f3f6fb] justify-center relative">
 			<h1 className="text-2xl font-semibold mb-1  text-center">
-				Hi, Rupam
+				Hello there!
 			</h1>
 			<p className="text-neutral-600 text-lg font-medium text-center mb-5">
 				What would you like to ask?
@@ -72,10 +74,10 @@ const NewChatPage = () => {
 							ref={buttonRef}
 							size="icon-lg"
 							className="text-white h-9 w-9 bg-ei-accent hover:bg-ei-accent/80"
-							// disabled={prompt.length === 0 || isLoading}
+							disabled={prompt.length === 0 || isLoading}
 							onClick={handleNewChat}
 						>
-							<ArrowUp />
+							{isLoading ? <Loader size={20} className="animate-spin" /> : <ArrowUp />}
 						</Button>
 					</div>
 				</div>
